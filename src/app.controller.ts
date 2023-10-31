@@ -1,16 +1,18 @@
-import { Controller, Request, Post, Get, UseGuards } from '@nestjs/common';
+import { Controller, Request, Post, Get, UseGuards, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { Public } from './decorator/customize';
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { LoginDto } from './auth/dto/login.dto';
 
+@ApiTags('Authen')
 @Controller()
 export class AppController {
     constructor(
         private readonly appService: AppService,
         private authService: AuthService,
-    ) {}
+    ) { }
 
     @Get()
     getHello(): string {
@@ -19,8 +21,11 @@ export class AppController {
 
     @Public()
     @UseGuards(LocalAuthGuard)
+    @ApiBody({ type: LoginDto })
     @Post('login')
-    async login(@Request() req) {
+    async login(
+        @Request() req
+    ) {
         return this.authService.login(req.user);
     }
 

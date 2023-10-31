@@ -12,7 +12,7 @@ export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
-    ) {}
+    ) { }
 
     async hashPassword(password: string) {
         const salt = await bcrypt.genSalt(10);
@@ -33,8 +33,8 @@ export class UsersService {
         return user;
     }
 
-    findAll() {
-        return `This action returns all users`;
+    async findAll() {
+        return await this.userModel.find({}, { password: 0 });
     }
 
     async findOne(id: string) {
