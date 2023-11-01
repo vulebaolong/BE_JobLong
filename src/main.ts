@@ -14,9 +14,9 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
 
     app.enableCors({
-        "origin": "*",
-        "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-        "preflightContinue": false,
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
     });
 
     const config = new DocumentBuilder()

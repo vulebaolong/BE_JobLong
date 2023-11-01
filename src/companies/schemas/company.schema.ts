@@ -15,13 +15,13 @@ export class Company {
     description: string;
 
     @Prop({ type: Object })
-    createdBy: { _id: mongoose.Schema.Types.ObjectId, email: string };
+    createdBy: { _id: mongoose.Schema.Types.ObjectId; email: string };
 
     @Prop({ type: Object })
-    updatedBy: { _id: mongoose.Schema.Types.ObjectId, email: string };
+    updatedBy: { _id: mongoose.Schema.Types.ObjectId; email: string };
 
     @Prop({ type: Object })
-    deletedBy: { _id: mongoose.Schema.Types.ObjectId, email: string };
+    deletedBy: { _id: mongoose.Schema.Types.ObjectId; email: string };
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);

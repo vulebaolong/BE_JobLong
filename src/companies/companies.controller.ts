@@ -1,37 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+} from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('companies')
 @Controller('companies')
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) { }
+    constructor(private readonly companiesService: CompaniesService) {}
 
-  @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companiesService.create(createCompanyDto);
-  }
+    @Post()
+    @ApiOperation({ summary: 'Create a company' })
+    @ApiBody({ type: CreateCompanyDto })
+    @ApiBearerAuth()
+    create(@Body() createCompanyDto: CreateCompanyDto) {
+        return this.companiesService.create(createCompanyDto);
+    }
 
-  @Get()
-  @ApiBearerAuth()
-  findAll() {
-    return this.companiesService.findAll();
-  }
+    @Get()
+    @ApiBearerAuth()
+    findAll() {
+        return this.companiesService.findAll();
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companiesService.findOne(+id);
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.companiesService.findOne(+id);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update(+id, updateCompanyDto);
-  }
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateCompanyDto: UpdateCompanyDto,
+    ) {
+        return this.companiesService.update(+id, updateCompanyDto);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companiesService.remove(+id);
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.companiesService.remove(+id);
+    }
 }
