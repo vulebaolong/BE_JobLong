@@ -5,16 +5,22 @@ import { Company } from './schemas/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { UserDocument } from 'src/users/schemas/user.schema';
+import { I_User } from 'src/users/users.interface';
 
 @Injectable()
 export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
         private companyModel: SoftDeleteModel<UserDocument>,
-    ) {}
+    ) { }
 
-    async create(createCompanyDto: CreateCompanyDto) {
-        return await this.companyModel.create(createCompanyDto);
+    async create(createCompanyDto: CreateCompanyDto, user: I_User) {
+        return await this.companyModel.create({
+            ...createCompanyDto, createdBy: {
+                _id: user._id,
+                email: user.email
+            }
+        });
     }
 
     findAll() {
