@@ -11,13 +11,16 @@ import {
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from './../decorator/customize';
+import { ResponseMessage, User } from './../decorator/customize';
 import { I_User } from 'src/users/users.interface';
 
 @ApiTags('companies')
-@Controller('companies')
+@Controller({
+    version: '1',
+    path: 'companies'
+})
 export class CompaniesController {
-    constructor(private readonly companiesService: CompaniesService) {}
+    constructor(private readonly companiesService: CompaniesService) { }
 
     @Post()
     @ApiOperation({ summary: 'Create a company' })
@@ -29,6 +32,7 @@ export class CompaniesController {
 
     @Get()
     @ApiBearerAuth()
+    @ResponseMessage("vulebaolong")
     findAll(
         @Query('page') currentPage: string,
         @Query('limit') limit: string,

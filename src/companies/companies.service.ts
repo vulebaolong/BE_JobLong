@@ -12,7 +12,7 @@ export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
         private companyModel: SoftDeleteModel<UserDocument>,
-    ) {}
+    ) { }
 
     async create(createCompanyDto: CreateCompanyDto, user: I_User) {
         return await this.companyModel.create({
@@ -39,8 +39,7 @@ export class CompaniesService {
             .find(filter)
             .skip(offset)
             .limit(defaultLimit)
-            // @ts-ignore: Unreachable code error
-            .sort(sort)
+            .sort(sort as any)
             .populate(population)
             .exec();
 

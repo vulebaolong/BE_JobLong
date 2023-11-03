@@ -1,8 +1,9 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { TransformInterceptor } from './core/transform.interceptor';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -10,8 +11,16 @@ async function bootstrap() {
     // config jwt global at the main.ts
     const reflector = app.get(Reflector);
     app.useGlobalGuards(new JwtAuthGuard(reflector));
+    app.useGlobalInterceptors(new TransformInterceptor(reflector));
 
     app.useGlobalPipes(new ValidationPipe());
+
+    // Version APIs
+    app.setGlobalPrefix('api');
+    app.enableVersioning({
+        type: VersioningType.URI,
+        defaultVersion: ['1', '2'],
+    });
 
     app.enableCors({
         origin: '*',
@@ -19,6 +28,7 @@ async function bootstrap() {
         preflightContinue: false,
     });
 
+    // swagger
     const config = new DocumentBuilder()
         .setTitle('Cats example')
         .setDescription('The cats API description')
@@ -27,6 +37,7 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
+
 
     await app.listen(process.env.PORT);
 }
