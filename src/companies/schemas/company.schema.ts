@@ -14,6 +14,19 @@ export class Company {
     @Prop()
     description: string;
 
+    // Default
+    @Prop()
+    isDeleted: boolean;
+
+    @Prop()
+    createdAt: Date;
+
+    @Prop()
+    updatedAt: Date;
+
+    @Prop()
+    deletedAt: Date;
+
     @Prop({ type: Object })
     createdBy: { _id: mongoose.Schema.Types.ObjectId; email: string };
 

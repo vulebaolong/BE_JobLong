@@ -12,9 +12,9 @@ export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
         private companyModel: SoftDeleteModel<UserDocument>,
-    ) { }
+    ) {}
 
-    async create(createCompanyDto: CreateCompanyDto, user: I_User) {
+    create = async (createCompanyDto: CreateCompanyDto, user: I_User) => {
         return await this.companyModel.create({
             ...createCompanyDto,
             createdBy: {
@@ -22,10 +22,10 @@ export class CompaniesService {
                 email: user.email,
             },
         });
-    }
+    };
 
-    async findAll(currentPage: number, limit: number, ps: string) {
-        const { filter, sort, projection, population } = aqp(ps);
+    findAll = async (currentPage: number, limit: number, ps: string) => {
+        const { filter, sort, population } = aqp(ps);
         delete filter.page;
         delete filter.limit;
 
@@ -52,13 +52,13 @@ export class CompaniesService {
             },
             result, //kết quả query
         };
-    }
+    };
 
-    findOne(id: number) {
+    findOne = async (id: number) => {
         return `This action returns a #${id} company`;
-    }
+    };
 
-    async update(id: string, createCompanyDto: CreateCompanyDto, user: I_User) {
+    update = async (id: string, createCompanyDto: CreateCompanyDto, user: I_User) => {
         return await this.companyModel.updateOne(
             { _id: id },
             {
@@ -69,9 +69,9 @@ export class CompaniesService {
                 },
             },
         );
-    }
+    };
 
-    async remove(id: string, user: I_User) {
+    remove = async (id: string, user: I_User) => {
         await this.companyModel.updateOne(
             { _id: id },
             {
@@ -82,5 +82,5 @@ export class CompaniesService {
             },
         );
         return await this.companyModel.softDelete({ _id: id });
-    }
+    };
 }

@@ -1,8 +1,4 @@
-import {
-    ExecutionContext,
-    Injectable,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from 'src/decorator/customize';
@@ -14,10 +10,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     canActivate(context: ExecutionContext) {
-        const isPublic = this.reflector.getAllAndOverride<boolean>(
-            IS_PUBLIC_KEY,
-            [context.getHandler(), context.getClass()],
-        );
+        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
         // nếu isPublic là true sẽ đi tiếp và không xác thực JWT
         if (isPublic) return true;
 
@@ -28,12 +21,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     handleRequest(err, user) {
         // You can throw an exception based on either "info" or "err" arguments
         if (err || !user) {
-            throw (
-                err ||
-                new UnauthorizedException(
-                    'Token không hợp lệ hoặc không có bearer ở headers',
-                )
-            );
+            throw err || new UnauthorizedException('Token không hợp lệ hoặc không có bearer ở headers');
         }
         return user;
     }

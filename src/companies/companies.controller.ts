@@ -1,13 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -17,10 +8,10 @@ import { I_User } from 'src/users/users.interface';
 @ApiTags('companies')
 @Controller({
     version: '1',
-    path: 'companies'
+    path: 'companies',
 })
 export class CompaniesController {
-    constructor(private readonly companiesService: CompaniesService) { }
+    constructor(private readonly companiesService: CompaniesService) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a company' })
@@ -32,12 +23,8 @@ export class CompaniesController {
 
     @Get()
     @ApiBearerAuth()
-    @ResponseMessage("vulebaolong")
-    findAll(
-        @Query('page') currentPage: string,
-        @Query('limit') limit: string,
-        @Query() qs: string,
-    ) {
+    @ResponseMessage('vulebaolong')
+    findAll(@Query('page') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
         return this.companiesService.findAll(+currentPage, +limit, qs);
     }
 
@@ -48,11 +35,7 @@ export class CompaniesController {
 
     @Patch(':id')
     @ApiOperation({ summary: 'Create a company' })
-    update(
-        @Param('id') id: string,
-        @Body() createCompanyDto: CreateCompanyDto,
-        @User() user: I_User,
-    ) {
+    update(@Param('id') id: string, @Body() createCompanyDto: CreateCompanyDto, @User() user: I_User) {
         return this.companiesService.update(id, createCompanyDto, user);
     }
 
