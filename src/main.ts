@@ -23,13 +23,16 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     app.enableVersioning({
         type: VersioningType.URI,
-        defaultVersion: ['1', '2'],
+        defaultVersion: ['1'],
     });
 
     app.enableCors({
+        // origin: '*' => cho phép tất cả truy cập
+        // origin: true => cho phép cùng domain eg: localhost
         origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         preflightContinue: false,
+        credentials: true // FE and BE are both open to exchange cookies
     });
 
     // swagger

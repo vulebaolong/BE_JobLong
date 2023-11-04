@@ -9,7 +9,7 @@ import { I_User } from './users.interface';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService) { }
 
     @Post()
     @ApiOperation({ summary: 'Create a user by admin' })
@@ -27,7 +27,11 @@ export class UsersController {
 
     @Get()
     @ApiBearerAuth()
-    async findAll(@Query('page') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    async findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string
+    ) {
         return await this.usersService.findAll(+currentPage, +limit, qs);
     }
 

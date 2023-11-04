@@ -12,7 +12,7 @@ export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
         private companyModel: SoftDeleteModel<UserDocument>,
-    ) {}
+    ) { }
 
     create = async (createCompanyDto: CreateCompanyDto, user: I_User) => {
         return await this.companyModel.create({
@@ -26,7 +26,7 @@ export class CompaniesService {
 
     findAll = async (currentPage: number, limit: number, ps: string) => {
         const { filter, sort, population } = aqp(ps);
-        delete filter.page;
+        delete filter.currentPage;
         delete filter.limit;
 
         const offset = (+currentPage - 1) * +limit;
@@ -45,10 +45,10 @@ export class CompaniesService {
 
         return {
             meta: {
-                current: currentPage, //trang hiện tại
+                currentPage, //trang hiện tại
                 pageSize: limit, //số lượng bản ghi đã lấy
-                pages: totalPages, //tổng số trang với điều kiện query
-                total: totalItems, // tổng số phần tử (số bản ghi)
+                totalPages, //tổng số trang với điều kiện query
+                totalItems, // tổng số phần tử (số bản ghi)
             },
             result, //kết quả query
         };

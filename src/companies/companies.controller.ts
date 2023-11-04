@@ -11,7 +11,7 @@ import { I_User } from 'src/users/users.interface';
     path: 'companies',
 })
 export class CompaniesController {
-    constructor(private readonly companiesService: CompaniesService) {}
+    constructor(private readonly companiesService: CompaniesService) { }
 
     @Post()
     @ApiOperation({ summary: 'Create a company' })
@@ -24,7 +24,11 @@ export class CompaniesController {
     @Get()
     @ApiBearerAuth()
     @ResponseMessage('vulebaolong')
-    findAll(@Query('page') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string
+    ) {
         return this.companiesService.findAll(+currentPage, +limit, qs);
     }
 

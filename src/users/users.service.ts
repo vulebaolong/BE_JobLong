@@ -15,7 +15,7 @@ export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
-    ) {}
+    ) { }
 
     hashPassword = async (password: string) => {
         const salt = await bcrypt.genSalt(10);
@@ -61,7 +61,7 @@ export class UsersService {
 
     findAll = async (currentPage: number, limit: number, ps: string) => {
         const { filter, sort, population } = aqp(ps);
-        delete filter.page;
+        delete filter.currentPage;
         delete filter.limit;
 
         const offset = (+currentPage - 1) * +limit;
@@ -81,10 +81,10 @@ export class UsersService {
 
         return {
             meta: {
-                current: currentPage, //trang hiện tại
+                currentPage, //trang hiện tại
                 pageSize: limit, //số lượng bản ghi đã lấy
-                pages: totalPages, //tổng số trang với điều kiện query
-                total: totalItems, // tổng số phần tử (số bản ghi)
+                totalPages, //tổng số trang với điều kiện query
+                totalItems, // tổng số phần tử (số bản ghi)
             },
             result, //kết quả query
         };
@@ -147,5 +147,9 @@ export class UsersService {
 
     updateUserToken = async (refreshToken: string, _id: string) => {
         return await this.userModel.updateOne({ _id }, { refreshToken });
+    };
+
+    findUserByToken = async (refreshToken: string) => {
+        return await this.userModel.findOne({ refreshToken }).select('-password');
     };
 }
