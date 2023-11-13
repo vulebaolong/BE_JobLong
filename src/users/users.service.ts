@@ -93,11 +93,7 @@ export class UsersService {
     findOne = async (id: string) => {
         if (!mongoose.Types.ObjectId.isValid(id)) return 'id không hợp lệ';
 
-        return await this.userModel
-            .findOne({
-                _id: id,
-            })
-            .select('-password');
+        return await this.userModel.findOne({ _id: id }).select('-password');
     };
 
     findOneByUsername = async (username: string) => {
