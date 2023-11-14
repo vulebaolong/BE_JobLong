@@ -14,6 +14,9 @@ export class Company {
     @Prop()
     description: string;
 
+    @Prop()
+    logo: string;
+
     // Default
     @Prop()
     isDeleted: boolean;
