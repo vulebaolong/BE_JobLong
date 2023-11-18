@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseMessage, User } from './../decorator/customize';
+import { Public, ResponseMessage, User } from './../decorator/customize';
 import { I_User } from 'src/users/users.interface';
 
 @ApiTags('companies')
@@ -22,8 +22,9 @@ export class CompaniesController {
     }
 
     @Get()
+    @Public()
     @ApiBearerAuth()
-    @ResponseMessage('vulebaolong')
+    @ResponseMessage('Get list company with panigation')
     findAll(
         @Query('currentPage') currentPage: string,
         @Query('limit') limit: string,
@@ -33,8 +34,9 @@ export class CompaniesController {
     }
 
     @Get(':id')
+    @Public()
     findOne(@Param('id') id: string) {
-        return this.companiesService.findOne(+id);
+        return this.companiesService.findOne(id);
     }
 
     @Patch(':id')

@@ -3,7 +3,7 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { I_User } from 'src/users/users.interface';
 
 @ApiTags('jobs')
@@ -21,6 +21,7 @@ export class JobsController {
     }
 
     @Get()
+    @Public()
     @ApiBearerAuth()
     findAll(
         @Query('currentPage') currentPage: string,
@@ -31,6 +32,7 @@ export class JobsController {
     }
 
     @Get(':id')
+    @Public()
     @ApiBearerAuth()
     findOne(@Param('id') id: string) {
         return this.jobsService.findOne(id);

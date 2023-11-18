@@ -54,7 +54,7 @@ export class CompaniesService {
         };
     };
 
-    findOne = async (id: number) => {
+    findOne = async (id: string) => {
         return `This action returns a #${id} company`;
     };
 
