@@ -32,8 +32,8 @@ async function bootstrap() {
 
     app.enableCors({
         // origin: '*' => cho phép tất cả truy cập
-        // origin: true => cho phép cùng domain eg: localhost
-        origin: '*',
+        origin: true, //=> cho phép cùng domain eg: localhost
+        // origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         preflightContinue: false,
         credentials: true, // FE and BE are both open to exchange cookies
