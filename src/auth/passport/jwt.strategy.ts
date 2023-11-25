@@ -20,6 +20,5 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: I_User) {
         return this.usersService.findOne(payload._id);
-        // return { userId: payload.sub, username: payload.username };
     }
 }

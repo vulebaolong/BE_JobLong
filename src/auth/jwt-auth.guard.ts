@@ -10,8 +10,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     canActivate(context: ExecutionContext) {
+        // lấy ra giá trị của decorator isPublic
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
-        // nếu isPublic là true sẽ đi tiếp và không xác thực JWT
+        
+        // nếu decorator isPublic là true sẽ đi tiếp và không xác thực JWT
         if (isPublic) return true;
 
         // ngược lại sẽ kiểm tra JWT
