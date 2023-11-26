@@ -7,6 +7,7 @@ import { UserDocument } from 'src/users/schemas/user.schema';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
+import { log } from 'src/helpers/log';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +44,8 @@ export class AuthService {
             if (!user) throw new BadRequestException('Refresh Token không hợp lệ vui lòng đăng nhập lại')
 
             const { name, email, role } = user;
+
+            log('refreshToken', 'Thành công', 'GREEN')
 
             return await this.login({ _id: user._id.toString(), name, email, role }, response, 'token refresh')
         } catch (error) {
