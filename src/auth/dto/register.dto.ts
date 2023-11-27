@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class RegisterDto {
     @ApiProperty()
-    @IsNotEmpty({ message: 'name không được để trống' })
+    @IsNotEmpty({ message: 'name cannot be empty' })
     @IsString()
     name: string;
 

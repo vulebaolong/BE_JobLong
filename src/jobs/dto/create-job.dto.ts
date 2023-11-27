@@ -4,19 +4,19 @@ import { ArrayNotEmpty, IsArray, IsBoolean, IsDate, IsNotEmpty, IsNotEmptyObject
 import mongoose from 'mongoose';
 
 export class Company {
-    @IsNotEmpty({ message: '_id không được để trống' })
+    @IsNotEmpty({ message: '_id cannot be empty' })
     _id: mongoose.Schema.Types.ObjectId;
 
-    @IsNotEmpty({ message: 'name không được để trống' })
+    @IsNotEmpty({ message: 'name cannot be empty' })
     name: string;
 
-    @IsNotEmpty({ message: 'logo không được để trống' })
+    @IsNotEmpty({ message: 'logo cannot be empty' })
     logo: string;
 }
 
 export class CreateJobDto {
     @ApiProperty()
-    @IsNotEmpty({ message: 'Name job không được để trống' })
+    @IsNotEmpty({ message: 'Name job cannot be empty' })
     name: string;
 
     @ApiProperty()
@@ -33,43 +33,43 @@ export class CreateJobDto {
     company: Company;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Location không được để trống' })
+    @IsNotEmpty({ message: 'Location cannot be empty' })
     location: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Salary không được để trống' })
+    @IsNotEmpty({ message: 'Salary cannot be empty' })
     @IsNumber({}, { message: 'Salary phải là số' })
     salary: number;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Salary không được để trống' })
+    @IsNotEmpty({ message: 'Salary cannot be empty' })
     @IsNumber({}, { message: 'Salary phải là số' })
     quantity: number;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Level không được để trống' })
+    @IsNotEmpty({ message: 'Level cannot be empty' })
     level: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Description không được để trống' })
+    @IsNotEmpty({ message: 'Description cannot be empty' })
     description: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'StartDate không được để trống' })
+    @IsNotEmpty({ message: 'StartDate cannot be empty' })
     // @IsDateString({}, { message: 'StartDate phải là dang date' })
     @Transform(({ value }) => new Date(value))
     @IsDate({ message: 'StartDate phải là dạng date' })
     startDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'EndDate không được để trống' })
+    @IsNotEmpty({ message: 'EndDate cannot be empty' })
     // @IsDateString({}, { message: 'EndDate phải là dang date' })
     @Transform(({ value }) => new Date(value))
     @IsDate({ message: 'EndDate phải có định dạng là date' })
     endDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'isActive không được để trống' })
+    @IsNotEmpty({ message: 'isActive cannot be empty' })
     @IsBoolean({ message: 'isActive phải là boolean' })
     isActive: boolean;
 }

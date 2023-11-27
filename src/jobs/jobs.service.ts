@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { I_User } from 'src/users/users.interface';
+import { IUser } from 'src/users/users.interface';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Job, JobDocument } from './schemas/job.schemas';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,7 +15,7 @@ export class JobsService {
         private jobModel: SoftDeleteModel<JobDocument>,
     ) { }
 
-    create = async (createJobDto: CreateJobDto, user: I_User) => {
+    create = async (createJobDto: CreateJobDto, user: IUser) => {
         const job = await this.jobModel.create({
             ...createJobDto,
             createdBy: {
@@ -30,8 +30,8 @@ export class JobsService {
         };
     };
 
-    findAll = async (currentPage: number, limit: number, ps: string) => {
-        const { filter, sort, population } = aqp(ps);
+    findAll = async (currentPage: number, limit: number, qs: string) => {
+        const { filter, sort, population } = aqp(qs);
         delete filter.currentPage;
         delete filter.limit;
 
@@ -46,7 +46,6 @@ export class JobsService {
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
-            .select('-password')
             .populate(population)
             .exec();
 
@@ -62,12 +61,14 @@ export class JobsService {
     }
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) return 'id không hợp lệ';
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
         return await this.jobModel.findOne({ _id: id })
     }
 
-    update = async (id: string, updateJobDto: UpdateJobDto, user: I_User) => {
+    update = async (id: string, updateJobDto: UpdateJobDto, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
         return await this.jobModel.updateOne(
             { _id: id },
             {
@@ -80,8 +81,8 @@ export class JobsService {
         );
     };
 
-    remove = async (id: string, user: I_User) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) return 'id không hợp lệ';
+    remove = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
         await this.jobModel.updateOne(
             { _id: id },

@@ -5,7 +5,7 @@ import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { LocalAuthGuard } from './local-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { I_User } from 'src/users/users.interface';
+import { IUser } from 'src/users/users.interface';
 import { Request, Response } from 'express';
 
 @ApiTags('Auth')
@@ -24,7 +24,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @ApiBody({ type: LoginDto })
     @ResponseMessage('user login')
-    async handleLogin(@Req() req: { user: I_User }, @Res({ passthrough: true }) response: Response) {
+    async handleLogin(@Req() req: { user: IUser }, @Res({ passthrough: true }) response: Response) {
         return await this.authService.login(req.user, response);
     }
 
@@ -44,7 +44,7 @@ export class AuthController {
     @Get('account')
     @ApiOperation({ summary: 'get info account' })
     @ResponseMessage('Get user infomation')
-    handleGetAccount(@User() user: I_User) {
+    handleGetAccount(@User() user: IUser) {
         return { user }
     }
 
@@ -60,7 +60,7 @@ export class AuthController {
     @Post('logout')
     @ApiOperation({ summary: 'Logout user' })
     @ResponseMessage('Logout user')
-    async handleLogout(@User() user: I_User, @Res({ passthrough: true }) response: Response) {
+    async handleLogout(@User() user: IUser, @Res({ passthrough: true }) response: Response) {
         return await this.authService.logout(user, response)
     }
 }

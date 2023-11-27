@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose from 'mongoose';
@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { RegisterDto } from 'src/auth/dto/register.dto';
-import { I_User } from './users.interface';
+import { IUser } from './users.interface';
 import aqp from 'api-query-params';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UsersService {
         return bcrypt.compareSync(password, hash);
     };
 
-    create = async (createUserDto: CreateUserDto, user: I_User) => {
+    create = async (createUserDto: CreateUserDto, user: IUser) => {
         try {
             const hashPassword = await this.hashPassword(createUserDto.password);
 
@@ -91,7 +91,7 @@ export class UsersService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) return 'id không hợp lệ';
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
         return await this.userModel.findOne({ _id: id }).select('-password');
     };
@@ -102,7 +102,7 @@ export class UsersService {
         });
     };
 
-    update = async (updateUserDto: UpdateUserDto, user: I_User) => {
+    update = async (updateUserDto: UpdateUserDto, user: IUser) => {
         try {
             return await this.userModel.updateOne(
                 {
@@ -123,8 +123,8 @@ export class UsersService {
         }
     };
 
-    remove = async (id: string, user: I_User) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) return 'id không hợp lệ';
+    remove = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
         await this.userModel.updateOne(
             { _id: id },
@@ -141,8 +141,10 @@ export class UsersService {
         });
     };
 
-    updateUserToken = async (refreshToken: string, _id: string) => {
-        return await this.userModel.updateOne({ _id }, { refreshToken });
+    updateUserToken = async (refreshToken: string, id: string) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
+        return await this.userModel.updateOne({ _id: id }, { refreshToken });
     };
 
     findUserByToken = async (refreshToken: string) => {

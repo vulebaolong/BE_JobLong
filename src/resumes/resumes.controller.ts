@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { IUser } from 'src/users/users.interface';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ResumesService } from './resumes.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 
+@ApiTags('resumes')
 @Controller('resumes')
 export class ResumesController {
-  constructor(private readonly resumesService: ResumesService) {}
+    constructor(private readonly resumesService: ResumesService) {}
 
-  @Post()
-  create(@Body() createResumeDto: CreateResumeDto) {
-    return this.resumesService.create(createResumeDto);
-  }
+    @Post()
+    @ApiOperation({ summary: 'Create a resumes' })
+    @ApiBody({ type: CreateResumeDto })
+    @ResponseMessage('Create a new resume')
+    create(@Body() createResumeDto: CreateResumeDto, @User() user: IUser) {
+        return this.resumesService.create(createResumeDto, user);
+    }
 
-  @Get()
-  findAll() {
-    return this.resumesService.findAll();
-  }
+    @Get()
+    @ApiBearerAuth()
+    @ResponseMessage('find all resumes with panigation')
+    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+        return this.resumesService.findAll(+currentPage, +limit, qs);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.resumesService.findOne(+id);
-  }
+    @Get('of-user')
+    @ApiBearerAuth()
+    @ResponseMessage('find all resumes of user with panigation')
+    findAllByUserId(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string, @User() user: IUser) {
+        return this.resumesService.findAllByUserId(+currentPage, +limit, qs, user);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto) {
-    return this.resumesService.update(+id, updateResumeDto);
-  }
+    @Get(':id')
+    @ApiBearerAuth()
+    @ResponseMessage('find a resume by id')
+    findOne(@Param('id') id: string) {
+        return this.resumesService.findOne(id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.resumesService.remove(+id);
-  }
+    @Patch(':id')
+    @ApiBearerAuth()
+    @ResponseMessage('update a resume')
+    update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto, @User() user: IUser) {
+        return this.resumesService.update(id, updateResumeDto, user);
+    }
+
+    @Delete(':id')
+    @ApiBearerAuth()
+    @ResponseMessage('remove a resume by id')
+    remove(@Param('id') id: string, @User() user: IUser) {
+        return this.resumesService.remove(id, user);
+    }
 }

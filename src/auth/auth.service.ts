@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { I_User } from 'src/users/users.interface';
+import { IUser } from 'src/users/users.interface';
 import { UsersService } from 'src/users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
@@ -41,11 +41,9 @@ export class AuthService {
 
             const user = await this.usersService.findUserByToken(refreshToken)
 
-            if (!user) throw new BadRequestException('Refresh Token không hợp lệ vui lòng đăng nhập lại')
+            if (!user) throw new BadRequestException('Refresh Token của user không tồn tại')
 
             const { name, email, role } = user;
-
-            log('refreshToken', 'Thành công', 'GREEN')
 
             return await this.login({ _id: user._id.toString(), name, email, role }, response, 'token refresh')
         } catch (error) {
@@ -53,7 +51,7 @@ export class AuthService {
         }
     }
 
-    login = async (user: I_User, response: Response, sub = 'token login') => {
+    login = async (user: IUser, response: Response, sub = 'token login') => {
         const { _id, name, email, role } = user;
 
         const payload = {
@@ -91,7 +89,7 @@ export class AuthService {
         return await this.usersService.register(registerDto);
     };
 
-    logout = async (user: I_User, response: Response) => {
+    logout = async (user: IUser, response: Response) => {
         await this.usersService.updateUserToken('', user._id)
         response.clearCookie('refresh_token')
         return 'oke'

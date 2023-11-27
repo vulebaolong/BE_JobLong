@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseMessage, User } from 'src/decorator/customize';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { I_User } from './users.interface';
+import { IUser } from './users.interface';
 
 @ApiTags('users')
 @Controller('users')
@@ -16,7 +16,7 @@ export class UsersController {
     @ApiBody({ type: CreateUserDto })
     @ApiBearerAuth()
     @ResponseMessage('create a new user')
-    async create(@Body() createUserDto: CreateUserDto, @User() user: I_User) {
+    async create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
         const newUser = await this.usersService.create(createUserDto, user);
 
         return {
@@ -43,14 +43,14 @@ export class UsersController {
 
     @Patch()
     @ApiBearerAuth()
-    async update(@Body() updateUserDto: UpdateUserDto, @User() user: I_User) {
+    async update(@Body() updateUserDto: UpdateUserDto, @User() user: IUser) {
         return await this.usersService.update(updateUserDto, user);
     }
 
     @Delete(':id')
     @ApiBearerAuth()
     @ResponseMessage('Delete a user')
-    async remove(@Param('id') id: string, @User() user: I_User) {
+    async remove(@Param('id') id: string, @User() user: IUser) {
         return await this.usersService.remove(id, user);
     }
 }

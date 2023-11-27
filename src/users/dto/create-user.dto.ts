@@ -4,41 +4,41 @@ import mongoose from 'mongoose';
 import { Type } from 'class-transformer';
 
 export class Company {
-    @IsNotEmpty({ message: '_id không được để trống' })
+    @IsNotEmpty({ message: '_id cannot be empty' })
     _id: mongoose.Schema.Types.ObjectId;
 
-    @IsNotEmpty({ message: 'name không được để trống' })
+    @IsNotEmpty({ message: 'name cannot be empty' })
     name: string;
 }
 
 export class CreateUserDto {
     @ApiProperty()
-    @IsNotEmpty({ message: 'Name không được để trống' })
+    @IsNotEmpty({ message: 'Name cannot be empty' })
     name: string;
 
     @ApiProperty()
     @IsEmail({}, { message: 'Email không hợp lệ' })
-    @IsNotEmpty({ message: 'Email không được để trống' })
+    @IsNotEmpty({ message: 'Email cannot be empty' })
     email: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Password không được để trống' })
+    @IsNotEmpty({ message: 'Password cannot be empty' })
     password: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Age không được để trống' })
+    @IsNotEmpty({ message: 'Age cannot be empty' })
     age: number;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Gender không được để trống' })
+    @IsNotEmpty({ message: 'Gender cannot be empty' })
     gender: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Address không được để trống' })
+    @IsNotEmpty({ message: 'Address cannot be empty' })
     address: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Role không được để trống' })
+    @IsNotEmpty({ message: 'Role cannot be empty' })
     role: string;
 
     @ApiProperty()

@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { Company } from './schemas/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { UserDocument } from 'src/users/schemas/user.schema';
-import { I_User } from 'src/users/users.interface';
+import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class CompaniesService {
@@ -14,7 +15,7 @@ export class CompaniesService {
         private companyModel: SoftDeleteModel<UserDocument>,
     ) { }
 
-    create = async (createCompanyDto: CreateCompanyDto, user: I_User) => {
+    create = async (createCompanyDto: CreateCompanyDto, user: IUser) => {
         return await this.companyModel.create({
             ...createCompanyDto,
             createdBy: {
@@ -55,10 +56,14 @@ export class CompaniesService {
     };
 
     findOne = async (id: string) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
         return `This action returns a #${id} company`;
     };
 
-    update = async (id: string, createCompanyDto: CreateCompanyDto, user: I_User) => {
+    update = async (id: string, createCompanyDto: CreateCompanyDto, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
         return await this.companyModel.updateOne(
             { _id: id },
             {
@@ -71,7 +76,9 @@ export class CompaniesService {
         );
     };
 
-    remove = async (id: string, user: I_User) => {
+    remove = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
         await this.companyModel.updateOne(
             { _id: id },
             {
