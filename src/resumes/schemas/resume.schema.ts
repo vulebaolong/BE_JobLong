@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { TStatus } from '../dto/create-resume.dto';
+import { Job } from 'src/jobs/schemas/job.schemas';
+import { Company } from 'src/companies/schemas/company.schema';
 
 export type ResumeDocument = HydratedDocument<Resume>;
 
@@ -18,10 +20,10 @@ export class Resume {
     @Prop({ default: 'PENDING' })
     status: TStatus;
 
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
     companyId: mongoose.Schema.Types.ObjectId;
 
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Job.name })
     jobId: mongoose.Schema.Types.ObjectId;
 
     @Prop({ type: mongoose.Schema.Types.Array })

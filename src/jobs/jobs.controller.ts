@@ -9,24 +9,21 @@ import { IUser } from 'src/users/users.interface';
 @ApiTags('jobs')
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobsService: JobsService) { }
+    constructor(private readonly jobsService: JobsService) {}
 
     @Post()
-    @ApiOperation({ summary: 'Create a job' })
-    @ApiBody({ type: CreateJobDto })
     @ApiBearerAuth()
+    @ApiOperation({ summary: 'Create a job' })
     @ResponseMessage('Create a new job')
+    @ApiBody({ type: CreateJobDto })
     async create(@Body() createJobDto: CreateJobDto, @User() user: IUser) {
         return await this.jobsService.create(createJobDto, user);
     }
 
     @Get()
     @Public()
-    findAll(
-        @Query('currentPage') currentPage: string,
-        @Query('limit') limit: string,
-        @Query() qs: string
-    ) {
+    @ResponseMessage('Get jobs with pagination')
+    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
         return this.jobsService.findAll(+currentPage, +limit, qs);
     }
 

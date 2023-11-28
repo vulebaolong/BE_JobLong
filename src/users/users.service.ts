@@ -15,7 +15,7 @@ export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
-    ) { }
+    ) {}
 
     hashPassword = async (password: string) => {
         const salt = await bcrypt.genSalt(10);
@@ -40,7 +40,7 @@ export class UsersService {
             });
         } catch (error) {
             if (error.code === 11000) {
-                throw new ConflictException('người dùng đã tồn tại');
+                throw new ConflictException('user already exists');
             }
         }
     };

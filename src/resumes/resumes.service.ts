@@ -15,78 +15,51 @@ export class ResumesService {
         private resumeModel: SoftDeleteModel<ResumeDocument>,
     ) {}
     create = async (createResumeDto: CreateResumeDto, user: IUser) => {
+        const { url, companyId, jobId } = createResumeDto;
+        const { _id, email } = user;
+
         const resume = await this.resumeModel.create({
-            ...createResumeDto,
-            email: user.email,
-            userId: user._id,
+            url,
+            companyId,
+            jobId,
+            email,
+            userId: _id,
             history: [
                 {
                     status: createResumeDto.status || 'PENDING',
                     updatedAt: new Date(),
-                    updatedBy: {
-                        _id: user._id,
-                        email: user.email,
-                    },
+                    updatedBy: { _id, email },
                 },
             ],
-            createdBy: {
-                _id: user._id,
-                email: user.email,
-            },
+            createdBy: { _id, email },
         });
 
         return {
-            _id: resume._id,
-            createdAt: resume.createdAt,
+            _id: resume?._id,
+            createdAt: resume?.createdAt,
         };
     };
 
-    findAll = async (currentPage: number, limit: number, qs: string) => {
-        const { filter, sort, population } = aqp(qs);
+    findAll = async (currentPage: number, limit: number, qs: string, user?: IUser) => {
+        const { filter, sort, population, projection } = aqp(qs);
         delete filter.currentPage;
         delete filter.limit;
+        const queryFilter = user ? { ...filter, userId: user._id } : filter;
 
         const offset = (+currentPage - 1) * +limit;
         const defaultLimit = +limit ? +limit : 10;
 
-        const totalItems = (await this.resumeModel.find(filter)).length;
+
+        const totalItems = (await this.resumeModel.find(queryFilter)).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
+
         const result = await this.resumeModel
-            .find(filter)
+            .find(queryFilter)
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
-            .populate(population)
-            .exec();
-
-        return {
-            meta: {
-                currentPage,
-                pageSize: limit,
-                totalPages,
-                totalItems,
-            },
-            result,
-        };
-    };
-
-    findAllByUserId = async (currentPage: number, limit: number, qs: string, user: IUser) => {
-        const { filter, sort, population } = aqp(qs);
-        delete filter.currentPage;
-        delete filter.limit;
-
-        const offset = (+currentPage - 1) * +limit;
-        const defaultLimit = +limit ? +limit : 10;
-
-        const totalItems = (await this.resumeModel.find({ ...filter, userId: user._id })).length;
-        const totalPages = Math.ceil(totalItems / defaultLimit);
-
-        const result = await this.resumeModel
-            .find({ ...filter, userId: user._id })
-            .skip(offset)
-            .limit(defaultLimit)
-            .sort(sort as any)
+            .select(projection as any)
             .populate(population)
             .exec();
 

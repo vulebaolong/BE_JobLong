@@ -26,11 +26,11 @@ export class ResumesController {
         return this.resumesService.findAll(+currentPage, +limit, qs);
     }
 
-    @Get('of-user')
+    @Get('by-user')
     @ApiBearerAuth()
     @ResponseMessage('find all resumes of user with panigation')
     findAllByUserId(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string, @User() user: IUser) {
-        return this.resumesService.findAllByUserId(+currentPage, +limit, qs, user);
+        return this.resumesService.findAll(+currentPage, +limit, qs, user);
     }
 
     @Get(':id')
@@ -43,7 +43,7 @@ export class ResumesController {
     @Patch(':id')
     @ApiBearerAuth()
     @ResponseMessage('update a resume')
-    update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto, @User() user: IUser) {
+    updateStatus(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto, @User() user: IUser) {
         return this.resumesService.update(id, updateResumeDto, user);
     }
 
