@@ -13,7 +13,7 @@ export class JobsController {
 
     @Post()
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Create a job' })
+    @ApiOperation({ summary: 'Create a new job' })
     @ResponseMessage('Create a new job')
     @ApiBody({ type: CreateJobDto })
     async create(@Body() createJobDto: CreateJobDto, @User() user: IUser) {
@@ -29,14 +29,15 @@ export class JobsController {
 
     @Get(':id')
     @Public()
+    @ResponseMessage('Get a job')
     findOne(@Param('id') id: string) {
         return this.jobsService.findOne(id);
     }
 
     @Patch(':id')
-    @ApiOperation({ summary: 'update a job' })
-    @ApiBody({ type: UpdateJobDto })
     @ApiBearerAuth()
+    @ApiBody({ type: UpdateJobDto })
+    @ApiOperation({ summary: 'update a job' })
     async update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto, @User() user: IUser) {
         return await this.jobsService.update(id, updateJobDto, user);
     }

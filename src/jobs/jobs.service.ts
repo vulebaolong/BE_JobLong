@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { IUser } from 'src/users/users.interface';
@@ -13,7 +13,7 @@ export class JobsService {
     constructor(
         @InjectModel(Job.name)
         private jobModel: SoftDeleteModel<JobDocument>,
-    ) { }
+    ) {}
 
     create = async (createJobDto: CreateJobDto, user: IUser) => {
         const job = await this.jobModel.create({
@@ -58,13 +58,17 @@ export class JobsService {
             },
             result, //kết quả query
         };
-    }
+    };
 
     findOne = async (id: string) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
-        return await this.jobModel.findOne({ _id: id })
-    }
+        const job = await this.jobModel.findOne({ _id: id });
+
+        if (!job) throw new NotFoundException('job not found');
+
+        return job;
+    };
 
     update = async (id: string, updateJobDto: UpdateJobDto, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
@@ -97,5 +101,5 @@ export class JobsService {
         return await this.jobModel.softDelete({
             _id: id,
         });
-    }
+    };
 }

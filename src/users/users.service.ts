@@ -48,13 +48,14 @@ export class UsersService {
     register = async (registerDto: RegisterDto): Promise<UserDocument> => {
         try {
             const hashPassword = await this.hashPassword(registerDto.password);
+
             return await this.userModel.create({
                 ...registerDto,
                 password: hashPassword,
             });
         } catch (error) {
             if (error.code === 11000) {
-                throw new ConflictException('người dùng đã tồn tại');
+                throw new ConflictException('user already exists');
             }
         }
     };

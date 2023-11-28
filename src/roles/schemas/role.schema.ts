@@ -2,11 +2,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Permission } from 'src/permissions/schemas/permission.schema';
 
-export type UserDocument = HydratedDocument<Role>;
+export type RoleDocument = HydratedDocument<Role>;
 
 @Schema({ collection: 'roles', timestamps: true })
 export class Role {
-    @Prop()
+    @Prop({ unique: true })
     name: string;
 
     @Prop()

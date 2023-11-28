@@ -4,72 +4,72 @@ import { ArrayNotEmpty, IsArray, IsBoolean, IsDate, IsNotEmpty, IsNotEmptyObject
 import mongoose from 'mongoose';
 
 export class Company {
-    @IsNotEmpty({ message: '_id cannot be empty' })
+    @IsNotEmpty({ message: 'Field company._id cannot be empty' })
     _id: mongoose.Schema.Types.ObjectId;
 
-    @IsNotEmpty({ message: 'name cannot be empty' })
+    @IsNotEmpty({ message: 'Field company.name cannot be empty' })
     name: string;
 
-    @IsNotEmpty({ message: 'logo cannot be empty' })
+    @IsNotEmpty({ message: 'lField company.ogo cannot be empty' })
     logo: string;
 }
 
 export class CreateJobDto {
     @ApiProperty()
-    @IsNotEmpty({ message: 'Name job cannot be empty' })
+    @IsNotEmpty({ message: 'Field name job cannot be empty' })
     name: string;
 
     @ApiProperty()
-    @IsArray({ message: 'skills phải là mảng' })
-    @ArrayNotEmpty({ message: 'skills phải là mảng không trống' })
-    @IsString({ each: true, message: 'item của mảng skills phải là string' })
+    @IsArray({ message: 'Field skills must be array' })
+    @ArrayNotEmpty({ message: 'Field skills cannot be array empty' })
+    @IsString({ each: true, message: 'item of array skills must be string' })
     skills: string[];
 
     @ApiProperty()
-    @IsObject({ message: 'company phải là object' })
-    @IsNotEmptyObject({}, { message: 'company phải là object không rỗng' })
+    @IsObject({ message: 'Field company must be object' })
+    @IsNotEmptyObject({}, { message: 'Field company can not object empty' })
     @ValidateNested()
     @Type(() => Company)
     company: Company;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Location cannot be empty' })
+    @IsNotEmpty({ message: 'Field location cannot be empty' })
     location: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Salary cannot be empty' })
-    @IsNumber({}, { message: 'Salary phải là số' })
+    @IsNotEmpty({ message: 'Field salary cannot be empty' })
+    @IsNumber({}, { message: 'Field salary must be number' })
     salary: number;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Salary cannot be empty' })
-    @IsNumber({}, { message: 'Salary phải là số' })
+    @IsNotEmpty({ message: 'Field quantity cannot be empty' })
+    @IsNumber({}, { message: 'Field quantity must be number' })
     quantity: number;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Level cannot be empty' })
+    @IsNotEmpty({ message: 'Field level cannot be empty' })
     level: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'Description cannot be empty' })
+    @IsNotEmpty({ message: 'Field description cannot be empty' })
     description: string;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'StartDate cannot be empty' })
+    @IsNotEmpty({ message: 'Field startDate cannot be empty' })
     // @IsDateString({}, { message: 'StartDate phải là dang date' })
     @Transform(({ value }) => new Date(value))
-    @IsDate({ message: 'StartDate phải là dạng date' })
+    @IsDate({ message: 'Field startDate must be date' })
     startDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'EndDate cannot be empty' })
+    @IsNotEmpty({ message: 'Field endDate cannot be empty' })
     // @IsDateString({}, { message: 'EndDate phải là dang date' })
     @Transform(({ value }) => new Date(value))
-    @IsDate({ message: 'EndDate phải có định dạng là date' })
+    @IsDate({ message: 'Field endDate must be date' })
     endDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty({ message: 'isActive cannot be empty' })
-    @IsBoolean({ message: 'isActive phải là boolean' })
+    @IsNotEmpty({ message: 'Field isActive cannot be empty' })
+    @IsBoolean({ message: 'Field isActive must be boolean' })
     isActive: boolean;
 }
