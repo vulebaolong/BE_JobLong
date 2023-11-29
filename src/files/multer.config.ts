@@ -3,6 +3,7 @@ import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-expr
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import path, { join } from 'path';
+import slugify from 'slugify';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
@@ -36,19 +37,19 @@ export class MulterConfigService implements MulterOptionsFactory {
     createMulterOptions(): MulterModuleOptions {
         return {
             storage: diskStorage({
-                destination: (req, file, cb) => {
-                    const folder = req?.headers?.folder_type ?? 'default';
-                    this.ensureExists(`public/images/${folder}`);
-                    cb(null, join(this.getRootPath(), `public/images/${folder}`));
-                },
+                // destination: (req, file, cb) => {
+                //     // const folder = req?.headers?.folder_type ?? 'default';
+                //     // this.ensureExists(`public/images/${folder}`);
+                //     // cb(null, join(this.getRootPath(), `public/images/${folder}`));
+                // },
                 filename: (req, file, cb) => {
                     //get image extension
                     const extName = path.extname(file.originalname);
 
                     //get image's name (without extension)
                     const baseName = path.basename(file.originalname, extName);
-                    
-                    const finalName = `${baseName}-${Date.now()}${extName}`;
+
+                    const finalName = `${slugify(baseName)}-${Date.now()}${extName}`;
                     cb(null, finalName);
                 },
             }),
