@@ -23,7 +23,7 @@ export class AuthController {
     @Post('login')
     @UseGuards(LocalAuthGuard)
     @ApiBody({ type: LoginDto })
-    @ResponseMessage('user login')
+    @ResponseMessage('login')
     async handleLogin(@Req() req: { user: IUser }, @Res({ passthrough: true }) response: Response) {
         return await this.authService.login(req.user, response);
     }
@@ -32,6 +32,7 @@ export class AuthController {
     @Post('register')
     @ApiBody({ type: RegisterDto })
     @ApiOperation({ summary: 'Create a user by user' })
+    @ResponseMessage('register')
     async handleRegister(@Body() register: RegisterDto) {
         const newUser = await this.authService.register(register);
 

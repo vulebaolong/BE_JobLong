@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayNotEmpty, IsArray, IsBoolean, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsBoolean, IsDefined, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 import { ObjectId } from 'mongoose';
 
 export class CreateRoleDto {
@@ -14,13 +14,15 @@ export class CreateRoleDto {
     description: string;
 
     @ApiProperty()
+    @IsDefined({ message: 'Your message here' })
     @IsNotEmpty({ message: 'Field isActive cannot be empty' })
     @IsBoolean({ message: 'Field isActive must be boolean' })
     isActive: boolean;
 
     @ApiProperty()
-    @IsArray({ message: 'Field permissions must be array' })
+    @IsNotEmpty({ message: 'Field permissions cannot be empty' })
     @ArrayNotEmpty({ message: 'Field permissions cannot be array empty' })
+    @IsArray({ message: 'Field permissions must be array' })
     @IsMongoId({ each: true, message: 'Field permissions item of array permissions must be mongooId' })
     permissions: ObjectId[];
 }

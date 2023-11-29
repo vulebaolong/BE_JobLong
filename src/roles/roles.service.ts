@@ -8,12 +8,14 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import util from 'util';
 import mongoose from 'mongoose';
 import aqp from 'api-query-params';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RolesService {
     constructor(
         @InjectModel(Role.name)
         private roleModel: SoftDeleteModel<RoleDocument>,
+        private configService: ConfigService,
     ) {}
 
     create = async (createRoleDto: CreateRoleDto, user: IUser) => {
@@ -36,9 +38,7 @@ export class RolesService {
                 createdAt: role.createdAt,
             };
         } catch (error) {
-            if (error.code === 11000) {
-                throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
-            }
+            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
         }
     };
 
@@ -75,7 +75,16 @@ export class RolesService {
     findOne = async (id: string) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
-        const role = await this.roleModel.findOne({ _id: id });
+        const role = await this.roleModel.findById(id).populate({
+            path: 'permissions',
+            select: {
+                _id: 1,
+                apiPath: 1,
+                name: 1,
+                method: 1,
+                module: 1,
+            },
+        });
 
         if (!role) throw new NotFoundException('role not found');
 
@@ -83,27 +92,34 @@ export class RolesService {
     };
 
     update = async (id: string, updateRoleDto: UpdateRoleDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
-        const { name, description, isActive, permissions } = updateRoleDto;
+            const { name, description, isActive, permissions } = updateRoleDto;
 
-        return await this.roleModel.updateOne(
-            { _id: id },
-            {
-                name,
-                description,
-                isActive,
-                permissions,
-                updatedBy: {
-                    _id: user._id,
-                    email: user.email,
+            return await this.roleModel.updateOne(
+                { _id: id },
+                {
+                    name,
+                    description,
+                    isActive,
+                    permissions,
+                    updatedBy: {
+                        _id: user._id,
+                        email: user.email,
+                    },
                 },
-            },
-        );
+            );
+        } catch (error) {
+            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+        }
     };
 
     remove = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
+        const role = await this.roleModel.findById(id);
+        if (role.name === this.configService.get<string>('ROLE_ADMIN')) throw new BadRequestException('Cannot delete ROLE_ADMIN');
 
         await this.roleModel.updateOne(
             { _id: id },

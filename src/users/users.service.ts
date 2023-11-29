@@ -9,12 +9,14 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import { IUser } from './users.interface';
 import aqp from 'api-query-params';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
+        private configService: ConfigService,
     ) {}
 
     hashPassword = async (password: string) => {
@@ -94,13 +96,16 @@ export class UsersService {
     findOne = async (id: string) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
-        return await this.userModel.findOne({ _id: id }).select('-password');
+        const user = await this.userModel
+            .findOne({ _id: id })
+            .select('-password')
+            .populate({ path: 'role', select: { name: 1 } });
+
+        return user;
     };
 
     findOneByUsername = async (username: string) => {
-        return await this.userModel.findOne({
-            email: username,
-        });
+        return await this.userModel.findOne({ email: username }).populate({ path: 'role', select: { name: 1, permission: 1 } });
     };
 
     update = async (updateUserDto: UpdateUserDto, user: IUser) => {
@@ -126,6 +131,10 @@ export class UsersService {
 
     remove = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
+        const userAdmin = await this.userModel.findById(id);
+
+        if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN')) throw new BadRequestException('Cannot delete admin account');
 
         await this.userModel.updateOne(
             { _id: id },
