@@ -38,11 +38,6 @@ export class FilesController {
         return this.firebaseService.upload(file, folder);
     }
 
-    @Post('download')
-    download( @Body('name') name: string) {
-        return this.firebaseService.download(name);
-    }
-
     @Get()
     findAll() {
         return this.filesService.findAll();

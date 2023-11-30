@@ -10,12 +10,18 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 import { IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
+import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
+import { USER_ROLE } from 'src/databases/sample';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
+
+        @InjectModel(Role.name)
+        private roleModel: SoftDeleteModel<RoleDocument>,
+
         private configService: ConfigService,
     ) {}
 
@@ -49,11 +55,26 @@ export class UsersService {
 
     register = async (registerDto: RegisterDto): Promise<UserDocument> => {
         try {
-            const hashPassword = await this.hashPassword(registerDto.password);
+            const { name, email, password, age, gender, address } = registerDto;
+
+            const userExist = await this.userModel.findOne({ email });
+
+            if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
+
+            const userRole = await this.roleModel.findOne({ name: USER_ROLE });
+
+            if (!userRole) throw new BadRequestException(`There is no ${USER_ROLE} data in the database to assign a default value to the user`);
+
+            const hashPassword = await this.hashPassword(password);
 
             return await this.userModel.create({
-                ...registerDto,
+                name,
+                email,
+                age,
+                gender,
+                address,
                 password: hashPassword,
+                role: userRole._id,
             });
         } catch (error) {
             if (error.code === 11000) {
@@ -105,7 +126,7 @@ export class UsersService {
     };
 
     findOneByUsername = async (username: string) => {
-        return await this.userModel.findOne({ email: username }).populate({ path: 'role', select: { name: 1, permission: 1 } });
+        return await this.userModel.findOne({ email: username }).populate({ path: 'role', select: { name: 1 } });
     };
 
     update = async (updateUserDto: UpdateUserDto, user: IUser) => {
@@ -158,6 +179,9 @@ export class UsersService {
     };
 
     findUserByToken = async (refreshToken: string) => {
-        return await this.userModel.findOne({ refreshToken }).select('-password');
+        return await this.userModel
+            .findOne({ refreshToken })
+            .select('-password')
+            .populate({ path: 'role', select: { name: 1 } });
     };
 }

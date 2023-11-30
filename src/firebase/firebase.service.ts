@@ -46,22 +46,6 @@ export class FirebaseService {
         };
     };
 
-    download = async (name: string) => {
-        const storageRef = ref(FirebaseService.storage, name);
-
-        const downloadURL = await getDownloadURL(storageRef);
-
-        // This can be downloaded directly:
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-            const blob = xhr.response;
-        };
-        xhr.open('GET', downloadURL);
-        xhr.send();
-        return 'oke'
-    };
-
     remove = async (name: string) => {
         const desertRef = ref(FirebaseService.storage, name);
         await deleteObject(desertRef);

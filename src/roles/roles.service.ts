@@ -9,6 +9,7 @@ import util from 'util';
 import mongoose from 'mongoose';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
+import { ADMIN_ROLE } from 'src/databases/sample';
 
 @Injectable()
 export class RolesService {
@@ -119,7 +120,7 @@ export class RolesService {
         if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
 
         const role = await this.roleModel.findById(id);
-        if (role.name === this.configService.get<string>('ROLE_ADMIN')) throw new BadRequestException('Cannot delete ROLE_ADMIN');
+        if (role.name === ADMIN_ROLE) throw new BadRequestException('Cannot delete ROLE_ADMIN');
 
         await this.roleModel.updateOne(
             { _id: id },

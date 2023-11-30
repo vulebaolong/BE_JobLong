@@ -7,11 +7,15 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { IUser } from 'src/users/users.interface';
 import { Request, Response } from 'express';
+import { RolesService } from 'src/roles/roles.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(
+        private authService: AuthService,
+        private roleService: RolesService,
+    ) {}
 
     @Get()
     @Public()
@@ -43,25 +47,27 @@ export class AuthController {
     }
 
     @Get('account')
-    @ApiOperation({ summary: 'get info account' })
+    @ApiOperation({ summary: 'Get user infomation' })
     @ResponseMessage('Get user infomation')
-    handleGetAccount(@User() user: IUser) {
-        return { user }
+    async handleGetAccount(@User() user: IUser) {
+        const role = (await this.roleService.findOne(user.role._id)) as any;
+        user.permissions = role.permissions;
+        return { user };
     }
 
     @Public()
     @Get('refresh')
-    @ApiOperation({ summary: 'get info account' })
+    @ApiOperation({ summary: 'Get user by refresh token' })
     @ResponseMessage('Get user by refresh token')
     handleRefreshToken(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
-        const refreshToken = request.cookies['refresh_token']
-        return this.authService.processNewToken(refreshToken, response)
+        const refreshToken = request.cookies['refresh_token'];
+        return this.authService.processNewToken(refreshToken, response);
     }
 
     @Post('logout')
     @ApiOperation({ summary: 'Logout user' })
     @ResponseMessage('Logout user')
     async handleLogout(@User() user: IUser, @Res({ passthrough: true }) response: Response) {
-        return await this.authService.logout(user, response)
+        return await this.authService.logout(user, response);
     }
 }

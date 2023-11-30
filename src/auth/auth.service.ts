@@ -8,23 +8,33 @@ import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
 import { log } from 'src/helpers/log';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: UsersService,
+        private roleService: RolesService,
         private jwtService: JwtService,
         private configService: ConfigService,
-    ) { }
+    ) {}
 
-    validateUser = async (username: string, pass: string): Promise<UserDocument> => {
+    validateUser = async (username: string, pass: string) => {
         const user = await this.usersService.findOneByUsername(username);
         if (!user) return null;
 
         const isValid = this.usersService.isValidPassword(pass, user.password);
         if (!isValid) return null;
 
-        return user;
+        const userRole = user.role as unknown as { _id: string; name: string };
+        const role = await this.roleService.findOne(userRole._id);
+
+        const userObj = {
+            ...user.toObject(),
+            permissions: role.permissions ?? [],
+        };
+
+        return userObj;
     };
 
     createRefreshToken = (payload: any) => {
@@ -33,26 +43,26 @@ export class AuthService {
             expiresIn: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
         });
         return refresh_token;
-    }
+    };
 
     processNewToken = async (refreshToken: string, response: Response) => {
         try {
-            this.jwtService.verify(refreshToken, { secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET') })
+            this.jwtService.verify(refreshToken, { secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET') });
 
-            const user = await this.usersService.findUserByToken(refreshToken)
+            const user = await this.usersService.findUserByToken(refreshToken);
+            if (!user) throw new BadRequestException('Refresh Token của user không tồn tại');
 
-            if (!user) throw new BadRequestException('Refresh Token của user không tồn tại')
+            const { name, email } = user;
+            const userRole = user.role as unknown as { _id: string; name: string };
 
-            const { name, email, role } = user;
-
-            return await this.login({ _id: user._id.toString(), name, email, role }, response, 'token refresh')
+            return await this.login({ _id: user._id.toString(), name, email, role: userRole }, response, 'token refresh');
         } catch (error) {
-            throw new BadRequestException('Refresh Token không hợp lệ vui lòng đăng nhập lại')
+            throw new BadRequestException('Refresh Token không hợp lệ vui lòng đăng nhập lại');
         }
-    }
+    };
 
     login = async (user: IUser, response: Response, sub = 'token login') => {
-        const { _id, name, email, role } = user;
+        const { _id, name, email, role, permissions } = user;
 
         const payload = {
             sub,
@@ -67,7 +77,10 @@ export class AuthService {
 
         await this.usersService.updateUserToken(refresh_token, _id);
 
-        response.clearCookie('refresh_token')
+        const userRole = user.role as unknown as { _id: string; name: string };
+        const roleTemp = await this.roleService.findOne(userRole._id);
+
+        response.clearCookie('refresh_token');
 
         response.cookie('refresh_token', refresh_token, {
             maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
@@ -81,6 +94,7 @@ export class AuthService {
                 name,
                 email,
                 role,
+                permissions: roleTemp.permissions ?? [],
             },
         };
     };
@@ -90,8 +104,8 @@ export class AuthService {
     };
 
     logout = async (user: IUser, response: Response) => {
-        await this.usersService.updateUserToken('', user._id)
-        response.clearCookie('refresh_token')
-        return 'oke'
-    }
+        await this.usersService.updateUserToken('', user._id);
+        response.clearCookie('refresh_token');
+        return 'oke';
+    };
 }

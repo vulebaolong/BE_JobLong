@@ -11,6 +11,7 @@ import { ResumesModule } from './resumes/resumes.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { FirebaseModule } from './firebase/frebase.module';
+import { DatabasesModule } from './databases/databases.module';
 
 @Module({
     imports: [
@@ -36,7 +37,8 @@ import { FirebaseModule } from './firebase/frebase.module';
         ResumesModule,
         PermissionsModule,
         RolesModule,
-        FirebaseModule
+        FirebaseModule,
+        DatabasesModule
     ],
 })
 export class AppModule {}
