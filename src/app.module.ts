@@ -12,6 +12,8 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { FirebaseModule } from './firebase/frebase.module';
 import { DatabasesModule } from './databases/databases.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
     imports: [
@@ -38,7 +40,9 @@ import { DatabasesModule } from './databases/databases.module';
         PermissionsModule,
         RolesModule,
         FirebaseModule,
-        DatabasesModule
+        DatabasesModule,
+        SubscribersModule,
+        MailModule
     ],
 })
 export class AppModule {}

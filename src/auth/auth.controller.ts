@@ -7,13 +7,14 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { IUser } from 'src/users/users.interface';
 import { Request, Response } from 'express';
-import { RolesService } from 'src/roles/roles.service';
+import { UsersService } from 'src/users/users.service';
 
-@ApiTags('Auth')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
+        private usersService: UsersService,
     ) {}
 
     @Get()
@@ -59,5 +60,12 @@ export class AuthController {
     @ResponseMessage('Logout user')
     async handleLogout(@User() user: IUser, @Res({ passthrough: true }) response: Response) {
         return await this.authService.logout(user, response);
+    }
+
+    @Get('account')
+    @ApiOperation({ summary: 'Get user infomation' })
+    @ResponseMessage('Get user infomation')
+    async getAcount(@User() user: IUser) {
+        return await this.usersService.findOne(user._id);
     }
 }

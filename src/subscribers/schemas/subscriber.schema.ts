@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Role } from 'src/roles/schemas/role.schema';
 
-export type UserDocument = HydratedDocument<User>;
+export type SubscriberDocument = HydratedDocument<Subscriber>;
 
-@Schema({ collection: 'users', timestamps: true })
-export class User {
+@Schema({ collection: 'subscribers', timestamps: true })
+export class Subscriber {
     @Prop()
     name: string;
 
@@ -13,25 +13,7 @@ export class User {
     email: string;
 
     @Prop()
-    password: string;
-
-    @Prop()
-    age: number;
-
-    @Prop()
-    gender: string;
-
-    @Prop()
-    address: string;
-
-    @Prop({ type: Object })
-    company: { _id: mongoose.Schema.Types.ObjectId; name: string };
-
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
-    role: mongoose.Schema.Types.ObjectId | Role;
-
-    @Prop()
-    refreshToken: string;
+    skills: string[];
 
     // Default
     @Prop()
@@ -56,4 +38,4 @@ export class User {
     deletedBy: { _id: mongoose.Schema.Types.ObjectId; email: string };
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const SubscriberSchema = SchemaFactory.createForClass(Subscriber);
