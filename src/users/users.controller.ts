@@ -27,12 +27,20 @@ export class UsersController {
 
     @Get()
     @ApiBearerAuth()
+    @ResponseMessage('Get users with pagination')
     async findAll(
         @Query('currentPage') currentPage: string,
         @Query('limit') limit: string,
         @Query() qs: string
     ) {
         return await this.usersService.findAll(+currentPage, +limit, qs);
+    }
+
+    @Get('account')
+    @ApiOperation({ summary: 'Get user infomation' })
+    @ResponseMessage('Get user infomation')
+    async getAcount(@User() user: IUser) {
+        return await this.usersService.findOne(user._id);
     }
 
     @Get(':id')

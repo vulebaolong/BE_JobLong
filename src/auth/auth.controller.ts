@@ -14,7 +14,6 @@ import { RolesService } from 'src/roles/roles.service';
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private roleService: RolesService,
     ) {}
 
     @Get()
@@ -44,15 +43,6 @@ export class AuthController {
             _id: newUser._id, //id của user được tạo
             createdAt: newUser.createdAt, //thời gian tạo user
         };
-    }
-
-    @Get('account')
-    @ApiOperation({ summary: 'Get user infomation' })
-    @ResponseMessage('Get user infomation')
-    async handleGetAccount(@User() user: IUser) {
-        const role = (await this.roleService.findOne(user.role._id)) as any;
-        user.permissions = role.permissions;
-        return { user };
     }
 
     @Public()

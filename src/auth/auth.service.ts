@@ -9,6 +9,7 @@ import ms from 'ms';
 import { Response } from 'express';
 import { log } from 'src/helpers/log';
 import { RolesService } from 'src/roles/roles.service';
+import { IPayloadToken } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -26,15 +27,7 @@ export class AuthService {
         const isValid = this.usersService.isValidPassword(pass, user.password);
         if (!isValid) return null;
 
-        const userRole = user.role as unknown as { _id: string; name: string };
-        const role = await this.roleService.findOne(userRole._id);
-
-        const userObj = {
-            ...user.toObject(),
-            permissions: role.permissions ?? [],
-        };
-
-        return userObj;
+        return user;
     };
 
     createRefreshToken = (payload: any) => {
@@ -52,10 +45,7 @@ export class AuthService {
             const user = await this.usersService.findUserByToken(refreshToken);
             if (!user) throw new BadRequestException('Refresh Token của user không tồn tại');
 
-            const { name, email } = user;
-            const userRole = user.role as unknown as { _id: string; name: string };
-
-            return await this.login({ _id: user._id.toString(), name, email, role: userRole }, response, 'token refresh');
+            return await this.login(user, response, 'token refresh');
         } catch (error) {
             throw new BadRequestException('Refresh Token không hợp lệ vui lòng đăng nhập lại');
         }
@@ -64,9 +54,10 @@ export class AuthService {
     login = async (user: IUser, response: Response, sub = 'token login') => {
         const { _id, name, email, role, permissions } = user;
 
-        const payload = {
+        console.log(user);
+
+        const payload: IPayloadToken = {
             sub,
-            iss: 'from server',
             _id,
             name,
             email,
@@ -76,9 +67,6 @@ export class AuthService {
         const refresh_token = this.createRefreshToken(payload);
 
         await this.usersService.updateUserToken(refresh_token, _id);
-
-        const userRole = user.role as unknown as { _id: string; name: string };
-        const roleTemp = await this.roleService.findOne(userRole._id);
 
         response.clearCookie('refresh_token');
 
@@ -94,7 +82,7 @@ export class AuthService {
                 name,
                 email,
                 role,
-                permissions: roleTemp.permissions ?? [],
+                permissions,
             },
         };
     };
