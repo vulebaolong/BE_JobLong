@@ -2,23 +2,23 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCompanyDto {
-    @IsNotEmpty({ message: 'Name cannot be empty' })
     @ApiProperty()
-    @IsString({ message: 'Name phải là string' })
+    @IsNotEmpty({ message: 'Field name cannot be empty' })
+    @IsString({ message: 'Field name must be string' })
     name: string;
 
-    @IsNotEmpty({ message: 'Address cannot be empty' })
     @ApiProperty()
-    @IsString({ message: 'Address phải là string' })
+    @IsNotEmpty({ message: 'Field address cannot be empty' })
+    @IsString({ message: 'Field address must be string' })
     address: string;
 
-    @IsNotEmpty({ message: 'Description cannot be empty' })
     @ApiProperty()
-    @IsString({ message: 'Description phải là string' })
+    @IsNotEmpty({ message: 'Field description cannot be empty' })
+    @IsString({ message: 'Field description must be string' })
     description: string;
 
-    @IsNotEmpty({ message: 'Logo cannot be empty' })
     @ApiProperty()
-    @IsString({ message: 'Logo phải là string' })
+    @IsNotEmpty({ message: 'Field logo cannot be empty' })
+    @IsString({ message: 'Field logo must be string' })
     logo: string;
 }

@@ -16,7 +16,7 @@ export class Company {
 
 export class CreateJobDto {
     @ApiProperty()
-    @IsNotEmpty({ message: 'Field name job cannot be empty' })
+    @IsNotEmpty({ message: 'Field name cannot be empty' })
     name: string;
 
     @ApiProperty()

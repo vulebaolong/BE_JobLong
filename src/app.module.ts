@@ -14,9 +14,19 @@ import { FirebaseModule } from './firebase/frebase.module';
 import { DatabasesModule } from './databases/databases.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { MailModule } from './mail/mail.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { HealthModule } from './health/health.module';
 
 @Module({
     imports: [
+        ThrottlerModule.forRoot([
+            {
+                ttl: 60000,
+                limit: 2,
+            },
+        ]),
+        ScheduleModule.forRoot(),
         ConfigModule.forRoot({
             isGlobal: true,
         }),
@@ -42,7 +52,8 @@ import { MailModule } from './mail/mail.module';
         FirebaseModule,
         DatabasesModule,
         SubscribersModule,
-        MailModule
+        MailModule,
+        HealthModule,
     ],
 })
 export class AppModule {}

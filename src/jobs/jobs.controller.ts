@@ -23,7 +23,11 @@ export class JobsController {
     @Get()
     @Public()
     @ResponseMessage('Get jobs with pagination')
-    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+    ) {
         return this.jobsService.findAll(+currentPage, +limit, qs);
     }
 

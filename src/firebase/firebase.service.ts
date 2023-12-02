@@ -1,5 +1,12 @@
 import { FirebaseApp, FirebaseOptions, initializeApp } from 'firebase/app';
-import { FirebaseStorage, getStorage, uploadBytesResumable, ref, getDownloadURL, deleteObject } from 'firebase/storage';
+import {
+    FirebaseStorage,
+    getStorage,
+    uploadBytesResumable,
+    ref,
+    getDownloadURL,
+    deleteObject,
+} from 'firebase/storage';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import slugify from 'slugify';

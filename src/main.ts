@@ -6,6 +6,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
+import helmet from 'helmet';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestApplication>(AppModule);
@@ -16,9 +17,13 @@ async function bootstrap() {
     app.useGlobalInterceptors(new TransformInterceptor(reflector));
 
     app.useStaticAssets(join(__dirname, '..', 'public')); // js, css, images
-    app.setBaseViewsDir(join(__dirname, '..', 'views'))
+    app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+        }),
+    );
 
     // config cookies
     app.use(cookieParser());
@@ -39,10 +44,21 @@ async function bootstrap() {
         credentials: true, // FE and BE are both open to exchange cookies
     });
 
+    app.use(helmet());
+
     // swagger
-    const config = new DocumentBuilder().setTitle('Cats example').setDescription('The cats API description').setVersion('1.0').addBearerAuth().build();
+    const config = new DocumentBuilder()
+        .setTitle('JobLong APIs Document')
+        .setDescription('All Modules APIs')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('swagger', app, document, {
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
+    });
 
     await app.listen(process.env.PORT);
 }

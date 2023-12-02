@@ -3,7 +3,7 @@ import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 
 @ApiTags('subscribers')
@@ -28,6 +28,14 @@ export class SubscribersController {
         return this.subscribersService.findAll(+currentPage, +limit, qs);
     }
 
+    @Get('skills')
+    @SkipCheckPermission()
+    @ApiBearerAuth()
+    @ResponseMessage('Get subscriber skill')
+    getUserSkills(@User() user: IUser) {
+        return this.subscribersService.getSkill(user);
+    }
+
     @Get(':id')
     @ApiBearerAuth()
     @ResponseMessage('Get a subscriber')
@@ -35,13 +43,14 @@ export class SubscribersController {
         return this.subscribersService.findOne(id);
     }
 
-    @Patch(':id')
+    @Patch()
+    @SkipCheckPermission()
     @ApiBearerAuth()
     @ApiBody({ type: UpdateSubscriberDto })
     @ApiOperation({ summary: 'update a subscriber' })
     @ResponseMessage('Update a subscriber')
-    update(@Param('id') id: string, @Body() updateSubscriberDto: UpdateSubscriberDto, @User() user: IUser) {
-        return this.subscribersService.update(id, updateSubscriberDto, user);
+    update(@Body() updateSubscriberDto: UpdateSubscriberDto, @User() user: IUser) {
+        return this.subscribersService.update(updateSubscriberDto, user);
     }
 
     @Delete(':id')

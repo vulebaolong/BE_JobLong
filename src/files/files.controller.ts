@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, Query } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseInterceptors,
+    UploadedFile,
+    ParseFilePipeBuilder,
+    HttpStatus,
+    Query,
+} from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
@@ -22,6 +35,11 @@ export class FilesController {
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({
+                    /**
+                     * allow types
+                     *  png (type/mimetype): png|image\/png
+                     *  jpg (type/mimetype): jpg|image\/jpeg
+                     */
                     fileType: /^(png|image\/png|jpg|image\/jpeg)$/i,
                 })
                 .addMaxSizeValidator({
@@ -33,6 +51,7 @@ export class FilesController {
                 }),
         )
         file: Express.Multer.File,
+
         @Body('folder') folder: string,
     ) {
         return this.firebaseService.upload(file, folder);

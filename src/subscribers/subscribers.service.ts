@@ -39,6 +39,10 @@ export class SubscribersService {
         }
     };
 
+    getSkill = async (user: IUser) => {
+        return await this.subscriberModel.findOne({ email: user.email }, { skills: 1 });
+    };
+
     findAll = async (currentPage: number, limit: number, ps: string) => {
         const { filter, sort, population } = aqp(ps);
         delete filter.currentPage;
@@ -79,14 +83,12 @@ export class SubscribersService {
         return subscriber;
     };
 
-    update = async (id: string, updateSubscriberDto: UpdateSubscriberDto, user: IUser) => {
+    update = async (updateSubscriberDto: UpdateSubscriberDto, user: IUser) => {
         try {
-            if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
-
             const { email, name, skills } = updateSubscriberDto;
 
             return await this.subscriberModel.updateOne(
-                { _id: id },
+                { email: user.email },
                 {
                     email,
                     name,
@@ -95,6 +97,9 @@ export class SubscribersService {
                         _id: user._id,
                         email: user.email,
                     },
+                },
+                {
+                    upsert: true,
                 },
             );
         } catch (error) {

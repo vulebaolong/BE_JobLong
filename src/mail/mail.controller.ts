@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { Public, ResponseMessage } from 'src/decorator/customize';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -6,9 +6,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Subscriber, SubscriberDocument } from 'src/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from 'src/jobs/schemas/job.schemas';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('mail')
 export class MailController {
+    private readonly logger = new Logger(MailController.name);
+
     constructor(
         @InjectModel(Subscriber.name)
         private subscriberModel: SoftDeleteModel<SubscriberDocument>,
@@ -19,25 +22,17 @@ export class MailController {
         private readonly mailService: MailService,
         private mailerService: MailerService,
     ) {}
+
+    // @Cron(CronExpression.EVERY_30_SECONDS)
+    handleCron() {
+        this.logger.debug('Called every 30 seconds');
+    }
+
     @Get()
     @Public()
     @ResponseMessage('Test email')
+    // @Cron("0 0 0 * * 0") // 0.00 AM every sunday
     async handleTestEmail() {
-        const jobs = [
-            {
-                name: 'abc123',
-                company: 'company123',
-                salary: 'salary123',
-                skills: ['PHP', 'JavaScript', 'English'],
-            },
-            {
-                name: 'abc234',
-                company: 'company234',
-                salary: 'salary234',
-                skills: ['PHP', 'JavaScript', 'English'],
-            },
-        ];
-
         const subscribers = await this.subscriberModel.find({});
         for (const subs of subscribers) {
             const subsSkills = subs.skills;
