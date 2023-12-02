@@ -6,7 +6,7 @@ import { ResponseMessage, User } from 'src/decorator/customize';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IUser } from './users.interface';
 
-@ApiTags('users')
+@ApiTags('Module users')
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }

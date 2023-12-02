@@ -7,6 +7,7 @@ import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import helmet from 'helmet';
+import { SwaggerTheme } from 'swagger-themes';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestApplication>(AppModule);
@@ -49,16 +50,21 @@ async function bootstrap() {
     // swagger
     const config = new DocumentBuilder()
         .setTitle('JobLong APIs Document')
+        .addTag('Module users', 'Tag description 1')
         .setDescription('All Modules APIs')
         .setVersion('1.0')
         .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('swagger', app, document, {
+    const theme = new SwaggerTheme('v3');
+    const options = {
+        explorer: true,
+        customCss: theme.getBuffer('dark'),
         swaggerOptions: {
             persistAuthorization: true,
         },
-    });
+    };
+    SwaggerModule.setup('swagger', app, document, options);
 
     await app.listen(process.env.PORT);
 }
