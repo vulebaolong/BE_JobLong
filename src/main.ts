@@ -1,13 +1,14 @@
 import { NestApplication, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import helmet from 'helmet';
 import { SwaggerTheme } from 'swagger-themes';
+import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
+import { configSwagger } from './swagger/config.swagger';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestApplication>(AppModule);
@@ -48,13 +49,7 @@ async function bootstrap() {
     app.use(helmet());
 
     // swagger
-    const config = new DocumentBuilder()
-        .setTitle('JobLong APIs Document')
-        .addTag('Module users', 'Tag description 1')
-        .setDescription('All Modules APIs')
-        .setVersion('1.0')
-        .addBearerAuth()
-        .build();
+    const { config } = configSwagger();
     const document = SwaggerModule.createDocument(app, config);
     const theme = new SwaggerTheme('v3');
     const options = {

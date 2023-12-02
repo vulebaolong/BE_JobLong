@@ -1,22 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
-import { CompaniesModule } from './companies/companies.module';
-import { JobsModule } from './jobs/jobs.module';
-import { FilesModule } from './files/files.module';
-import { ResumesModule } from './resumes/resumes.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { RolesModule } from './roles/roles.module';
-import { FirebaseModule } from './firebase/frebase.module';
-import { DatabasesModule } from './databases/databases.module';
-import { SubscribersModule } from './subscribers/subscribers.module';
-import { MailModule } from './mail/mail.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { HealthModule } from './health/health.module';
+import { RootModule } from './modules/root.module';
 
 @Module({
     imports: [
@@ -41,19 +29,7 @@ import { HealthModule } from './health/health.module';
             }),
             inject: [ConfigService],
         }),
-        UsersModule,
-        AuthModule,
-        CompaniesModule,
-        JobsModule,
-        FilesModule,
-        ResumesModule,
-        PermissionsModule,
-        RolesModule,
-        FirebaseModule,
-        DatabasesModule,
-        SubscribersModule,
-        MailModule,
-        HealthModule,
+        RootModule,
     ],
 })
 export class AppModule {}
