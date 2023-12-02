@@ -1,16 +1,15 @@
 import { NestApplication, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { TransformInterceptor } from './core/transform.interceptor';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import helmet from 'helmet';
-import { SwaggerTheme } from 'swagger-themes';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
-import { configSwagger } from './swagger/config.swagger';
+import { useSwagger } from './common/swagger/swagger';
 
 async function bootstrap() {
+    const logger = new Logger('Bootstrap');
     const app = await NestFactory.create<NestApplication>(AppModule);
 
     // config jwt global at the main.ts
@@ -21,11 +20,7 @@ async function bootstrap() {
     app.useStaticAssets(join(__dirname, '..', 'public')); // js, css, images
     app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
-    app.useGlobalPipes(
-        new ValidationPipe({
-            whitelist: true,
-        }),
-    );
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
     // config cookies
     app.use(cookieParser());
@@ -49,18 +44,11 @@ async function bootstrap() {
     app.use(helmet());
 
     // swagger
-    const { config } = configSwagger();
-    const document = SwaggerModule.createDocument(app, config);
-    const theme = new SwaggerTheme('v3');
-    const options = {
-        explorer: true,
-        customCss: theme.getBuffer('dark'),
-        swaggerOptions: {
-            persistAuthorization: true,
-        },
-    };
-    SwaggerModule.setup('swagger', app, document, options);
+    useSwagger(app);
 
-    await app.listen(process.env.PORT);
+    const port = process.env.PORT;
+    await app.listen(port).then(() => {
+        logger.verbose(`App is running on http://localhost:${port}`);
+    });
 }
 bootstrap();

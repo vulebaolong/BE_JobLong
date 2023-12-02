@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role, RoleDocument } from './schemas/role.schema';
@@ -39,7 +44,8 @@ export class RolesService {
                 createdAt: role.createdAt,
             };
         } catch (error) {
-            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            if (error.code === 11000)
+                throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
         }
     };
 
@@ -74,7 +80,8 @@ export class RolesService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const role = await this.roleModel.findById(id).populate({
             path: 'permissions',
@@ -93,9 +100,10 @@ export class RolesService {
     };
 
     update = async (id: string, updateRoleDto: UpdateRoleDto, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+        
         try {
-            if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
-
             const { name, description, isActive, permissions } = updateRoleDto;
 
             return await this.roleModel.updateOne(
@@ -112,12 +120,14 @@ export class RolesService {
                 },
             );
         } catch (error) {
-            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            if (error.code === 11000)
+                throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
         }
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const role = await this.roleModel.findById(id);
         if (role.name === ADMIN_ROLE) throw new BadRequestException('Cannot delete ROLE_ADMIN');

@@ -3,9 +3,11 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_ROLES } from 'src/contants/swagger.contants';
+import { TAG_MODULE_ROLES } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags(TAG_MODULE_ROLES)
 @Controller('roles')
@@ -24,7 +26,11 @@ export class RolesController {
     @Get()
     @Public()
     @ResponseMessage('Get roles with pagination')
-    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+    ) {
         return this.rolesService.findAll(+currentPage, +limit, qs);
     }
 

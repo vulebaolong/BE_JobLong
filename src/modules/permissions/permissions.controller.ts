@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_PERMISSIONS } from 'src/contants/swagger.contants';
+import { TAG_MODULE_PERMISSIONS } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 @ApiTags(TAG_MODULE_PERMISSIONS)
 @Controller('permissions')

@@ -3,9 +3,11 @@ import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import mongoose from 'mongoose';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_COMPANIES } from 'src/contants/swagger.contants';
+import { TAG_MODULE_COMPANIES } from 'src/common/contants/swagger.contants';
+import { User } from 'src/common/decorators/user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
 @ApiTags(TAG_MODULE_COMPANIES)
 @Controller({

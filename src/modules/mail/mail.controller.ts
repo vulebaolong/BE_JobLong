@@ -1,6 +1,5 @@
 import { Controller, Get, Logger } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { Public, ResponseMessage } from 'src/decorator/customize';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
@@ -8,7 +7,9 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { ApiTags } from '@nestjs/swagger';
 import { Subscriber, SubscriberDocument } from 'src/modules/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from '../jobs/schemas/job.schemas';
-import { TAG_MODULE_MAIL } from 'src/contants/swagger.contants';
+import { TAG_MODULE_MAIL } from 'src/common/contants/swagger.contants';
+import { Public } from 'src/common/decorators/public.decorator';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
 @ApiTags(TAG_MODULE_MAIL)
 @Controller('mail')

@@ -4,7 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
-import { log } from 'src/helpers/log';
+import { log } from 'src/common/helpers/log';
 import { IPayloadToken } from './auth.interface';
 import { UsersService } from '../users/users.service';
 import { RolesService } from '../roles/roles.service';
@@ -39,7 +39,9 @@ export class AuthService {
 
     processNewToken = async (refreshToken: string, response: Response) => {
         try {
-            this.jwtService.verify(refreshToken, { secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET') });
+            this.jwtService.verify(refreshToken, {
+                secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+            });
 
             const user = await this.usersService.findUserByToken(refreshToken);
             if (!user) throw new BadRequestException('Refresh Token của user không tồn tại');
@@ -91,6 +93,8 @@ export class AuthService {
     logout = async (user: IUser, response: Response) => {
         await this.usersService.updateUserToken('', user._id);
         response.clearCookie('refresh_token');
-        return 'oke';
+        return {
+            _id: user._id,
+        };
     };
 }

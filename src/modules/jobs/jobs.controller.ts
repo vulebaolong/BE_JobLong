@@ -3,9 +3,11 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_JOBS } from 'src/contants/swagger.contants';
+import { TAG_MODULE_JOBS } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags(TAG_MODULE_JOBS)
 @Controller('jobs')

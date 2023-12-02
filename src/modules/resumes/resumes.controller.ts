@@ -3,9 +3,10 @@ import { ResumesService } from './resumes.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_RESUMES } from 'src/contants/swagger.contants';
+import { TAG_MODULE_RESUMES } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 @ApiTags(TAG_MODULE_RESUMES)
 @Controller('resumes')
@@ -23,14 +24,23 @@ export class ResumesController {
     @Get()
     @ApiBearerAuth()
     @ResponseMessage('find all resumes with panigation')
-    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+    ) {
         return this.resumesService.findAll(+currentPage, +limit, qs);
     }
 
     @Get('by-user')
     @ApiBearerAuth()
     @ResponseMessage('find all resumes of user with panigation')
-    findAllByUserId(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string, @User() user: IUser) {
+    findAllByUserId(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+        @User() user: IUser,
+    ) {
         return this.resumesService.findAll(+currentPage, +limit, qs, user);
     }
 
@@ -44,7 +54,11 @@ export class ResumesController {
     @Patch(':id')
     @ApiBearerAuth()
     @ResponseMessage('update a resume')
-    updateStatus(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto, @User() user: IUser) {
+    updateStatus(
+        @Param('id') id: string,
+        @Body() updateResumeDto: UpdateResumeDto,
+        @User() user: IUser,
+    ) {
         return this.resumesService.update(id, updateResumeDto, user);
     }
 

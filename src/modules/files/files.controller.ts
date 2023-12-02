@@ -10,16 +10,14 @@ import {
     UploadedFile,
     ParseFilePipeBuilder,
     HttpStatus,
-    Query,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ResponseMessage } from 'src/decorator/customize';
 import { FirebaseService } from 'src/modules/firebase/firebase.service';
-import { TAG_MODULE_FILES } from 'src/contants/swagger.contants';
+import { TAG_MODULE_FILES } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
 @ApiTags(TAG_MODULE_FILES)
 @Controller('files')

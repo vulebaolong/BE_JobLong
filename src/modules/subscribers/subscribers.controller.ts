@@ -3,9 +3,11 @@ import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_SUBSCRIBERS } from 'src/contants/swagger.contants';
+import { TAG_MODULE_SUBSCRIBERS } from 'src/common/contants/swagger.contants';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { SkipCheckPermission } from 'src/common/decorators/skip-check-permission.decorator';
 
 @ApiTags(TAG_MODULE_SUBSCRIBERS)
 @Controller('subscribers')
@@ -25,7 +27,11 @@ export class SubscribersController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Get subscriber with pagination' })
     @ResponseMessage('Get subscriber with pagination')
-    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+    ) {
         return this.subscribersService.findAll(+currentPage, +limit, qs);
     }
 

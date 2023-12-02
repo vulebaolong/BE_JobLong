@@ -1,4 +1,12 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadGatewayException,
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    InternalServerErrorException,
+    Logger,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose, { Document, Model } from 'mongoose';
@@ -13,9 +21,12 @@ import { USER_ROLE } from 'src/modules/databases/sample';
 import { RegisterDto } from 'src/modules/auth/dto/register.dto';
 import { Role, RoleDocument } from '../roles/schemas/role.schema';
 import { RolesService } from '../roles/roles.service';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
+    private readonly logger = new Logger(UsersService.name);
+
     constructor(
         @InjectModel(User.name)
         private userModel: SoftDeleteModel<UserDocument>,
@@ -40,7 +51,7 @@ export class UsersService {
         try {
             const hashPassword = await this.hashPassword(createUserDto.password);
 
-            return await this.userModel.create({
+            const userNew = await this.userModel.create({
                 ...createUserDto,
                 password: hashPassword,
                 createdBy: {
@@ -48,10 +59,11 @@ export class UsersService {
                     email: user.email,
                 },
             });
+
+            return plainToClass(User, userNew.toObject());
         } catch (error) {
-            if (error.code === 11000) {
-                throw new ConflictException('user already exists');
-            }
+            if (error.code === 11000) throw new ConflictException('user already exists');
+            throw new InternalServerErrorException(error.message);
         }
     };
 
@@ -65,7 +77,10 @@ export class UsersService {
 
             const userRole = await this.roleModel.findOne({ name: USER_ROLE });
 
-            if (!userRole) throw new BadRequestException(`There is no ${USER_ROLE} data in the database to assign a default value to the user`);
+            if (!userRole)
+                throw new BadRequestException(
+                    `There is no ${USER_ROLE} data in the database to assign a default value to the user`,
+                );
 
             const hashPassword = await this.hashPassword(password);
 
@@ -85,12 +100,13 @@ export class UsersService {
         }
     };
 
-    update = async (updateUserDto: UpdateUserDto, user: IUser) => {
+    update = async (id: string, updateUserDto: UpdateUserDto, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
         try {
             return await this.userModel.updateOne(
-                {
-                    _id: updateUserDto._id,
-                },
+                { _id: id },
                 {
                     ...updateUserDto,
                     updatedBy: {
@@ -100,18 +116,21 @@ export class UsersService {
                 },
             );
         } catch (error) {
-            if (error.code === 11000) {
-                throw new ConflictException('email người dùng đã tồn tại');
-            }
+            if (error.code === 11000) throw new ConflictException('Email already exists');
+            if (error.code === 66) throw new BadRequestException(error.message);
+            this.logger.error(error);
+            throw new InternalServerErrorException(error.message);
         }
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const userAdmin = await this.userModel.findById(id);
 
-        if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN')) throw new BadRequestException('Cannot delete admin account');
+        if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN'))
+            throw new BadRequestException('Cannot delete admin account');
 
         await this.userModel.updateOne(
             { _id: id },
@@ -129,7 +148,8 @@ export class UsersService {
     };
 
     updateUserToken = async (refreshToken: string, id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         return await this.userModel.updateOne({ _id: id }, { refreshToken });
     };
@@ -167,15 +187,20 @@ export class UsersService {
 
     // Get all value a user
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
-        const user = await this.userModel.findOne({ _id: id }).select('-password -refreshToken').populate<IRolePopulate>({ path: 'role', select: 'name' });
+        const user = await this.userModel
+            .findOne({ _id: id })
+            .select('-password -refreshToken')
+            .populate<IRolePopulate>({ path: 'role', select: 'name' });
 
         if (!user) throw new NotFoundException('user not exist');
 
         const userObj = user.toObject();
 
-        if (!('_id' in userObj.role)) throw new BadRequestException(`Role: ${userObj.role} not exsit in collection role`);
+        if (!('_id' in userObj.role))
+            throw new BadRequestException(`Role: ${userObj.role} not exsit in collection role`);
 
         const role = await this.roleService.findOne(userObj.role._id.toString());
 
@@ -188,20 +213,24 @@ export class UsersService {
     };
 
     findOneById = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const user = await this.userModel
             .findOne({ _id: id })
             .select('-password')
             .populate({ path: 'role', select: { name: 1 } });
 
-        if (!('_id' in user.role)) throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
+        if (!('_id' in user.role))
+            throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
 
         return await this.resultUser(user);
     };
 
     findOneByUsername = async (username: string) => {
-        const user = await this.userModel.findOne({ email: username }).populate<IRolePopulate>({ path: 'role', select: 'name' });
+        const user = await this.userModel
+            .findOne({ email: username })
+            .populate<IRolePopulate>({ path: 'role', select: 'name' });
 
         if (!user) throw new NotFoundException('user not exist');
 
@@ -211,7 +240,10 @@ export class UsersService {
     };
 
     findUserByToken = async (refreshToken: string) => {
-        const user = await this.userModel.findOne({ refreshToken }).select('-password').populate<IRolePopulate>({ path: 'role', select: 'name' });
+        const user = await this.userModel
+            .findOne({ refreshToken })
+            .select('-password')
+            .populate<IRolePopulate>({ path: 'role', select: 'name' });
 
         if (!user) throw new NotFoundException('user not exist');
 
@@ -221,7 +253,8 @@ export class UsersService {
     };
 
     resultUser = async (user: any) => {
-        if (!('_id' in user.role)) throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
+        if (!('_id' in user.role))
+            throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
 
         const role = await this.roleService.findOne(user.role._id.toString());
 
