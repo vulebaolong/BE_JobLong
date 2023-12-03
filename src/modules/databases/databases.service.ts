@@ -40,14 +40,17 @@ export class DatabasesService implements OnModuleInit {
 
         await this.createUser();
 
-        if (await this.checkCountModel('End')) return this.logger.log(`=> database init created successfully`);
+        if (await this.checkCountModel('End'))
+            return this.logger.log(`=> database init created successfully`);
     };
 
     checkCountModel = async (mes?: string) => {
         const countUser = await this.userModel.count();
         const countPermission = await this.permissionModel.count();
         const countRole = await this.roleModel.count();
-        this.logger.log(`countUser: ${countUser} / countRole: ${countRole} / countPermission: ${countPermission} => ${mes}`);
+        this.logger.log(
+            `countUser: ${countUser} / countRole: ${countRole} / countPermission: ${countPermission} => ${mes}`,
+        );
         return countUser > 0 && countRole > 0 && countPermission > 0;
     };
 
@@ -80,7 +83,9 @@ export class DatabasesService implements OnModuleInit {
             {
                 name: "I'm admin",
                 email: 'admin@gmail.com',
-                password: await this.usersService.hashPassword(this.configService.get<string>('INIT_PASSWORD')),
+                password: await this.usersService.hashPassword(
+                    this.configService.get<string>('INIT_PASSWORD'),
+                ),
                 age: 69,
                 gender: 'MALE',
                 address: 'VietNam',
@@ -89,7 +94,9 @@ export class DatabasesService implements OnModuleInit {
             {
                 name: "I'm Hỏi Dân IT",
                 email: 'vulebaolong@gmail.com',
-                password: await this.usersService.hashPassword(this.configService.get<string>('INIT_PASSWORD')),
+                password: await this.usersService.hashPassword(
+                    this.configService.get<string>('INIT_PASSWORD'),
+                ),
                 age: 96,
                 gender: 'MALE',
                 address: 'VietNam',
@@ -98,7 +105,9 @@ export class DatabasesService implements OnModuleInit {
             {
                 name: "I'm normal user",
                 email: 'user@gmail.com',
-                password: await this.usersService.hashPassword(this.configService.get<string>('INIT_PASSWORD')),
+                password: await this.usersService.hashPassword(
+                    this.configService.get<string>('INIT_PASSWORD'),
+                ),
                 age: 69,
                 gender: 'MALE',
                 address: 'VietNam',

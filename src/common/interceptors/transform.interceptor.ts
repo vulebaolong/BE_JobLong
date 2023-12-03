@@ -4,17 +4,17 @@ import { map } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { RESPONSE_MESSAGE } from '../decorators/response-message.decorator';
 
-export interface Response<T> {
+export interface Response<> {
     statusCode: number;
     message?: string;
     data: any;
 }
 
 @Injectable()
-export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
+export class TransformInterceptor<T> implements NestInterceptor<T, Response> {
     constructor(private reflector: Reflector) {}
 
-    intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
+    intercept(context: ExecutionContext, next: CallHandler): Observable<Response> {
         return next.handle().pipe(
             map((data) => ({
                 statusCode: context.switchToHttp().getResponse().statusCode,

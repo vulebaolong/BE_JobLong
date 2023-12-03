@@ -6,10 +6,7 @@ import {
     SwaggerModule,
     getSchemaPath,
 } from '@nestjs/swagger';
-import {
-    ReferenceObject,
-    SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+
 import {
     TAG_MODULE_AUTH,
     TAG_MODULE_COMPANIES,
@@ -23,8 +20,12 @@ import {
     TAG_MODULE_SUBSCRIBERS,
     TAG_MODULE_USER,
 } from 'src/common/contants/swagger.contants';
+import { Company } from 'src/modules/companies/schemas/company.schema';
+import { Job } from 'src/modules/jobs/schemas/job.schemas';
 import { Permission } from 'src/modules/permissions/schemas/permission.schema';
+import { Resume } from 'src/modules/resumes/schemas/resume.schema';
 import { Role } from 'src/modules/roles/schemas/role.schema';
+import { Subscriber } from 'src/modules/subscribers/schemas/subscriber.schema';
 import { User } from 'src/modules/users/schemas/user.schema';
 import { SwaggerTheme } from 'swagger-themes';
 
@@ -48,7 +49,7 @@ export const useSwagger = (app: INestApplication) => {
         .build();
 
     const document = SwaggerModule.createDocument(app, config, {
-        extraModels: [User, Permission, Role],
+        extraModels: [User, Permission, Role, Job, Company, Resume, Subscriber],
     });
 
     const theme = new SwaggerTheme('v3');

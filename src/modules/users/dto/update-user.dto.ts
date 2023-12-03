@@ -1,6 +1,6 @@
-import { OmitType } from '@nestjs/mapped-types';
+// import { OmitType } from '@nestjs/mapped-types';
+// import { IsNotEmpty } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
-import { IsNotEmpty } from 'class-validator';
 import { PartialType } from '@nestjs/swagger';
 
 // OmitType => bỏ đi 1 key nào đó
@@ -12,4 +12,3 @@ import { PartialType } from '@nestjs/swagger';
 // }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
-

@@ -4,7 +4,6 @@ import { RegisterDto } from './dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
-import { log } from 'src/common/helpers/log';
 import { IPayloadToken } from './auth.interface';
 import { UsersService } from '../users/users.service';
 import { RolesService } from '../roles/roles.service';

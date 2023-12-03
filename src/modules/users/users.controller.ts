@@ -2,10 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { IUser } from './users.interface';
 import { TAG_MODULE_USER } from 'src/common/contants/swagger.contants';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import {
     ApiCreateUser,

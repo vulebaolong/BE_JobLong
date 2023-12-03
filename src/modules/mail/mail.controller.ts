@@ -3,13 +3,12 @@ import { MailService } from './mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
-import { Cron, CronExpression } from '@nestjs/schedule';
+// import { Cron, CronExpression } from '@nestjs/schedule';
 import { ApiTags } from '@nestjs/swagger';
 import { Subscriber, SubscriberDocument } from 'src/modules/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from '../jobs/schemas/job.schemas';
 import { TAG_MODULE_MAIL } from 'src/common/contants/swagger.contants';
-import { Public } from 'src/common/decorators/public.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ApiSendMail } from './mail.apply-decorators';
 
 @ApiTags(TAG_MODULE_MAIL)
 @Controller('mail')
@@ -33,14 +32,16 @@ export class MailController {
     }
 
     @Get()
-    @Public()
-    @ResponseMessage('Test email')
+    @ApiSendMail()
     // @Cron("0 0 0 * * 0") // 0.00 AM every sunday
-    async handleTestEmail() {
+    async sendEmail() {
         const subscribers = await this.subscriberModel.find({});
+
         for (const subs of subscribers) {
             const subsSkills = subs.skills;
+
             const jobWithMatchingSkills = await this.jobModel.find({ skills: { $in: subsSkills } });
+
             if (jobWithMatchingSkills?.length) {
                 const jobs = jobWithMatchingSkills.map((job) => {
                     return {
@@ -63,8 +64,10 @@ export class MailController {
                     },
                 });
             }
-            //todo
-            //build template
         }
+
+        return {
+            result: 'Email sent successfully',
+        };
     }
 }

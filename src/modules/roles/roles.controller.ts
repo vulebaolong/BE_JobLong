@@ -6,12 +6,19 @@ import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
 import { TAG_MODULE_ROLES } from 'src/common/contants/swagger.contants';
 import { User } from 'src/common/decorators/user.decorator';
-import { ApiCreateRole, ApiDeleteRole, ApiGetListRoles, ApiGetRole, ApiRestoreRole, ApiUpdateRole } from './roles.apply-decorators';
+import {
+    ApiCreateRole,
+    ApiDeleteRole,
+    ApiGetListRoles,
+    ApiGetRole,
+    ApiRestoreRole,
+    ApiUpdateRole,
+} from './roles.apply-decorators';
 
 @ApiTags(TAG_MODULE_ROLES)
 @Controller('roles')
 export class RolesController {
-    constructor(private readonly rolesService: RolesService) { }
+    constructor(private readonly rolesService: RolesService) {}
 
     @Post()
     @ApiCreateRole()

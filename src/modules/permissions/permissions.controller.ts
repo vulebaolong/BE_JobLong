@@ -6,12 +6,19 @@ import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
 import { TAG_MODULE_PERMISSIONS } from 'src/common/contants/swagger.contants';
 import { User } from 'src/common/decorators/user.decorator';
-import { ApiCreatePermission, ApiDeletePermission, ApiGetListPermissions, ApiGetPermission, ApiRestorePermission, ApiUpdatePermission } from './permissions.apply-decorator';
+import {
+    ApiCreatePermission,
+    ApiDeletePermission,
+    ApiGetListPermissions,
+    ApiGetPermission,
+    ApiRestorePermission,
+    ApiUpdatePermission,
+} from './permissions.apply-decorators';
 
 @ApiTags(TAG_MODULE_PERMISSIONS)
 @Controller('permissions')
 export class PermissionsController {
-    constructor(private readonly permissionsService: PermissionsService) { }
+    constructor(private readonly permissionsService: PermissionsService) {}
 
     @Post()
     @ApiCreatePermission()
@@ -21,7 +28,11 @@ export class PermissionsController {
 
     @Get()
     @ApiGetListPermissions()
-    findAll(@Query('currentPage') currentPage: string, @Query('limit') limit: string, @Query() qs: string) {
+    findAll(
+        @Query('currentPage') currentPage: string,
+        @Query('limit') limit: string,
+        @Query() qs: string,
+    ) {
         return this.permissionsService.findAll(+currentPage, +limit, qs);
     }
 
@@ -33,7 +44,11 @@ export class PermissionsController {
 
     @Patch(':id')
     @ApiUpdatePermission()
-    update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto, @User() user: IUser) {
+    update(
+        @Param('id') id: string,
+        @Body() updatePermissionDto: UpdatePermissionDto,
+        @User() user: IUser,
+    ) {
         return this.permissionsService.update(id, updatePermissionDto, user);
     }
 

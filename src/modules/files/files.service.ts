@@ -5,7 +5,7 @@ import { UpdateFileDto } from './dto/update-file.dto';
 @Injectable()
 export class FilesService {
     create(createFileDto: CreateFileDto) {
-        return 'This action adds a new file';
+        return `${createFileDto}This action adds a new file`;
     }
 
     findAll() {
@@ -17,7 +17,7 @@ export class FilesService {
     }
 
     update(id: string, updateFileDto: UpdateFileDto) {
-        return `This action updates a #${id} file`;
+        return `This action updates a #${id} ${updateFileDto}file`;
     }
 
     remove(name: string) {

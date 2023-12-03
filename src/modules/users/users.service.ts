@@ -1,5 +1,4 @@
 import {
-    BadGatewayException,
     BadRequestException,
     ConflictException,
     Injectable,
@@ -9,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

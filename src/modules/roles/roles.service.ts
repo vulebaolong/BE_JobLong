@@ -22,7 +22,7 @@ export class RolesService {
         @InjectModel(Role.name)
         private roleModel: SoftDeleteModel<RoleDocument>,
         private configService: ConfigService,
-    ) { }
+    ) {}
 
     create = async (createRoleDto: CreateRoleDto, user: IUser) => {
         try {
@@ -143,7 +143,8 @@ export class RolesService {
     };
 
     restore = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const roleRestore = await this.roleModel.restore({ _id: id });
         await this.roleModel.updateOne(
@@ -154,8 +155,8 @@ export class RolesService {
                     email: user.email,
                 },
             },
-        )
+        );
 
-        return roleRestore
+        return roleRestore;
     };
 }

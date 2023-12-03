@@ -2,12 +2,19 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
 import { TAG_MODULE_SUBSCRIBERS } from 'src/common/contants/swagger.contants';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { User } from 'src/common/decorators/user.decorator';
-import { SkipCheckPermission } from 'src/common/decorators/skip-check-permission.decorator';
+import {
+    ApiCreateSubscriber,
+    ApiDeleteSubscriber,
+    ApiGetListSubscribers,
+    ApiGetSkillsOfSubscriber,
+    ApiGetSubscriber,
+    ApiRestoreSubscriber,
+    ApiUpdateSubscriber,
+} from './subscribers.apply-decorators';
 
 @ApiTags(TAG_MODULE_SUBSCRIBERS)
 @Controller('subscribers')
@@ -15,18 +22,13 @@ export class SubscribersController {
     constructor(private readonly subscribersService: SubscribersService) {}
 
     @Post()
-    @ApiOperation({ summary: 'Create a subscriber' })
-    @ApiBody({ type: CreateSubscriberDto })
-    @ApiBearerAuth()
-    @ResponseMessage('Create a subscriber')
+    @ApiCreateSubscriber()
     create(@Body() createSubscriberDto: CreateSubscriberDto, @User() user: IUser) {
         return this.subscribersService.create(createSubscriberDto, user);
     }
 
     @Get()
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Get subscriber with pagination' })
-    @ResponseMessage('Get subscriber with pagination')
+    @ApiGetListSubscribers()
     findAll(
         @Query('currentPage') currentPage: string,
         @Query('limit') limit: string,
@@ -36,33 +38,32 @@ export class SubscribersController {
     }
 
     @Get('skills')
-    @SkipCheckPermission()
-    @ApiBearerAuth()
-    @ResponseMessage('Get subscriber skill')
+    @ApiGetSkillsOfSubscriber()
     getUserSkills(@User() user: IUser) {
         return this.subscribersService.getSkill(user);
     }
 
     @Get(':id')
-    @ApiBearerAuth()
-    @ResponseMessage('Get a subscriber')
+    @ApiGetSubscriber()
     findOne(@Param('id') id: string) {
         return this.subscribersService.findOne(id);
     }
 
     @Patch()
-    @SkipCheckPermission()
-    @ApiBearerAuth()
-    @ApiBody({ type: UpdateSubscriberDto })
-    @ApiOperation({ summary: 'update a subscriber' })
-    @ResponseMessage('Update a subscriber')
+    @ApiUpdateSubscriber()
     update(@Body() updateSubscriberDto: UpdateSubscriberDto, @User() user: IUser) {
         return this.subscribersService.update(updateSubscriberDto, user);
     }
 
     @Delete(':id')
-    @ResponseMessage('Delete a subscriber')
+    @ApiDeleteSubscriber()
     remove(@Param('id') id: string, @User() user: IUser) {
         return this.subscribersService.remove(id, user);
+    }
+
+    @Patch('restore/:id')
+    @ApiRestoreSubscriber()
+    restore(@Param('id') id: string, @User() user: IUser) {
+        return this.subscribersService.restore(id, user);
     }
 }

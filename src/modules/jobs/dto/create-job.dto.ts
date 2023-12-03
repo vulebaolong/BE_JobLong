@@ -1,6 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, IsBoolean, IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import {
+    ArrayNotEmpty,
+    IsArray,
+    IsBoolean,
+    IsDate,
+    IsNotEmpty,
+    IsNotEmptyObject,
+    IsNumber,
+    IsObject,
+    IsString,
+    ValidateNested,
+} from 'class-validator';
 import mongoose from 'mongoose';
 
 export class Company {

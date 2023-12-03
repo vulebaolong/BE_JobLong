@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, getSchemaPath } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';

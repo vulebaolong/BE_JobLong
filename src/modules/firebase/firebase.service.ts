@@ -43,7 +43,9 @@ export class FirebaseService {
 
         const storageRef = ref(FirebaseService.storage, finalName);
 
-        const snapshot = await uploadBytesResumable(storageRef, file.buffer, { contentType: file.mimetype });
+        const snapshot = await uploadBytesResumable(storageRef, file.buffer, {
+            contentType: file.mimetype,
+        });
 
         const downloadURL = await getDownloadURL(snapshot.ref);
 

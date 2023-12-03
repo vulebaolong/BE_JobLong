@@ -2,54 +2,55 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { Role } from 'src/modules/roles/schemas/role.schema';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { CreateJobDto } from './dto/create-job.dto';
+import { Job } from './schemas/job.schemas';
+import { Public } from 'src/common/decorators/public.decorator';
+import { UpdateJobDto } from './dto/update-job.dto';
 
-export const ApiCreateRole = () => {
-    const mes = 'Create a new role';
+export const ApiCreateJob = () => {
+    const mes = 'Create a new job';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiOperation({ summary: 'Create a new job' }),
+        ResponseMessage('Create a new job'),
+        ApiBody({ type: CreateJobDto }),
+        CreatedResponse(mes, Job),
+    );
+};
+
+export const ApiGetListJob = () => {
+    const mes = 'Get list jobs with pagination';
+    return applyDecorators(
+        Public(),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        OkResponse(mes, Job, true),
+    );
+};
+
+export const ApiGetJob = () => {
+    const mes = 'Get a job by id';
     return applyDecorators(
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        ApiBody({ type: CreateRoleDto }),
-        CreatedResponse(mes, Role),
+        OkResponse(mes, Job, false),
     );
 };
 
-export const ApiGetListRoles = () => {
-    const mes = 'Get list roles with pagination';
+export const ApiUpdateJob = () => {
+    const mes = 'Update a job by id';
     return applyDecorators(
         ApiBearerAuth(),
-        ApiOperation({ summary: mes }),
-        ResponseMessage(mes),
-        OkResponse(mes, Role, true),
-    );
-};
-
-export const ApiGetRole = () => {
-    const mes = 'Get a role by id';
-    return applyDecorators(
-        ApiBearerAuth(),
-        ApiOperation({ summary: mes }),
-        ResponseMessage(mes),
-        OkResponse(mes, Role, false),
-    );
-};
-
-export const ApiUpdateRole = () => {
-    const mes = 'Update a role by id';
-    return applyDecorators(
-        ApiBearerAuth(),
-        ApiBody({ type: UpdateRoleDto }),
+        ApiBody({ type: UpdateJobDto }),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
         UpdatedResponse(mes),
     );
 };
 
-export const ApiDeleteRole = () => {
-    const mes = 'Delete a role by id';
+export const ApiDeleteJob = () => {
+    const mes = 'Delete a job by id';
     return applyDecorators(
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
@@ -58,8 +59,8 @@ export const ApiDeleteRole = () => {
     );
 };
 
-export const ApiRestoreRole = () => {
-    const mes = 'Restore a role by id';
+export const ApiRestoreJob = () => {
+    const mes = 'Restore a job by id';
     return applyDecorators(
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),

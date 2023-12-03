@@ -58,7 +58,7 @@ export class MulterConfigService implements MulterOptionsFactory {
                 const allowedFileTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'];
 
                 const originalname = file.originalname;
-                const extName = originalname.substring(originalname.lastIndexOf('.') + 1)
+                const extName = originalname.substring(originalname.lastIndexOf('.') + 1);
                 const isValidFileType = allowedFileTypes.includes(extName);
                 if (!isValidFileType) {
                     cb(

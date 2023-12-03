@@ -1,4 +1,12 @@
-import { ArrayNotEmpty, IsArray, IsBoolean, IsDefined, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import {
+    ArrayNotEmpty,
+    IsArray,
+    IsBoolean,
+    IsDefined,
+    IsMongoId,
+    IsNotEmpty,
+    IsString,
+} from 'class-validator';
 import { ObjectId } from 'mongoose';
 
 export class CreateRoleDto {
@@ -18,6 +26,9 @@ export class CreateRoleDto {
     @IsNotEmpty({ message: 'Field permissions cannot be empty' })
     @ArrayNotEmpty({ message: 'Field permissions cannot be array empty' })
     @IsArray({ message: 'Field permissions must be array' })
-    @IsMongoId({ each: true, message: 'Field permissions item of array permissions must be mongooId' })
+    @IsMongoId({
+        each: true,
+        message: 'Field permissions item of array permissions must be mongooId',
+    })
     permissions: ObjectId[];
 }

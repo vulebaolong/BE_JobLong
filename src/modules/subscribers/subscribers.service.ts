@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import aqp from 'api-query-params';
@@ -35,7 +40,8 @@ export class SubscribersService {
                 createdAt: subscriber.createdAt,
             };
         } catch (error) {
-            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            if (error.code === 11000)
+                throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
         }
     };
 
@@ -74,7 +80,8 @@ export class SubscribersService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const subscriber = await this.subscriberModel.findById(id);
 
@@ -103,12 +110,14 @@ export class SubscribersService {
                 },
             );
         } catch (error) {
-            if (error.code === 11000) throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            if (error.code === 11000)
+                throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
         }
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         await this.subscriberModel.updateOne(
             { _id: id },
@@ -123,5 +132,23 @@ export class SubscribersService {
         return await this.subscriberModel.softDelete({
             _id: id,
         });
+    };
+
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
+        const subscriberRestore = await this.subscriberModel.restore({ _id: id });
+        await this.subscriberModel.updateOne(
+            { _id: id },
+            {
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        );
+
+        return subscriberRestore;
     };
 }

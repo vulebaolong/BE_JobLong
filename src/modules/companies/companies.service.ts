@@ -1,19 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { Company } from './schemas/company.schema';
+import { Company, CompanyDocument } from './schemas/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
-import { UserDocument } from '../users/schemas/user.schema';
 import { IUser } from '../users/users.interface';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
-        private companyModel: SoftDeleteModel<UserDocument>,
-    ) { }
+        private companyModel: SoftDeleteModel<CompanyDocument>,
+    ) {}
 
     create = async (createCompanyDto: CreateCompanyDto, user: IUser) => {
         return await this.companyModel.create({
@@ -56,18 +56,20 @@ export class CompaniesService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         return `This action returns a #${id} company`;
     };
 
-    update = async (id: string, createCompanyDto: CreateCompanyDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+    update = async (id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         return await this.companyModel.updateOne(
             { _id: id },
             {
-                ...createCompanyDto,
+                ...updateCompanyDto,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
@@ -77,7 +79,8 @@ export class CompaniesService {
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         await this.companyModel.updateOne(
             { _id: id },
@@ -89,5 +92,23 @@ export class CompaniesService {
             },
         );
         return await this.companyModel.softDelete({ _id: id });
+    };
+
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
+        const companyRestore = await this.companyModel.restore({ _id: id });
+        await this.companyModel.updateOne(
+            { _id: id },
+            {
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        );
+
+        return companyRestore;
     };
 }

@@ -1,10 +1,7 @@
 import {
     Controller,
-    Get,
     Post,
     Body,
-    Patch,
-    Param,
     Delete,
     UseInterceptors,
     UploadedFile,
@@ -12,7 +9,6 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { UpdateFileDto } from './dto/update-file.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from 'src/modules/firebase/firebase.service';
@@ -56,20 +52,20 @@ export class FilesController {
         return this.firebaseService.upload(file, folder);
     }
 
-    @Get()
-    findAll() {
-        return this.filesService.findAll();
-    }
+    // @Get()
+    // findAll() {
+    //     return this.filesService.findAll();
+    // }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.filesService.findOne(+id);
-    }
+    // @Get(':id')
+    // findOne(@Param('id') id: string) {
+    //     return this.filesService.findOne(+id);
+    // }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-        return this.filesService.update(id, updateFileDto);
-    }
+    // @Patch(':id')
+    // update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
+    //     return this.filesService.update(id, updateFileDto);
+    // }
 
     @Delete()
     remove(@Body('name') name: string) {

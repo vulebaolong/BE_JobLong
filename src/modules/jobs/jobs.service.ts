@@ -61,7 +61,8 @@ export class JobsService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const job = await this.jobModel.findOne({ _id: id });
 
@@ -71,7 +72,8 @@ export class JobsService {
     };
 
     update = async (id: string, updateJobDto: UpdateJobDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         return await this.jobModel.updateOne(
             { _id: id },
@@ -86,7 +88,8 @@ export class JobsService {
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         await this.jobModel.updateOne(
             { _id: id },
@@ -101,5 +104,23 @@ export class JobsService {
         return await this.jobModel.softDelete({
             _id: id,
         });
+    };
+
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
+        const roleRestore = await this.jobModel.restore({ _id: id });
+        await this.jobModel.updateOne(
+            { _id: id },
+            {
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        );
+
+        return roleRestore;
     };
 }

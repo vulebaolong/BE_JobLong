@@ -18,7 +18,7 @@ export class ResumesService {
         const { url, companyId, jobId } = createResumeDto;
         const { _id, email } = user;
 
-        const resume = await this.resumeModel.create({
+        return await this.resumeModel.create({
             url,
             companyId,
             jobId,
@@ -33,11 +33,6 @@ export class ResumesService {
             ],
             createdBy: { _id, email },
         });
-
-        return {
-            _id: resume?._id,
-            createdAt: resume?.createdAt,
-        };
     };
 
     findAll = async (currentPage: number, limit: number, qs: string, user?: IUser) => {
@@ -49,10 +44,8 @@ export class ResumesService {
         const offset = (+currentPage - 1) * +limit;
         const defaultLimit = +limit ? +limit : 10;
 
-
         const totalItems = (await this.resumeModel.find(queryFilter)).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
-
 
         const result = await this.resumeModel
             .find(queryFilter)
@@ -75,9 +68,12 @@ export class ResumesService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
-        const resume = await this.resumeModel.findOne({ _id: id }).where({ isDeleted: { $ne: true } });
+        const resume = await this.resumeModel
+            .findOne({ _id: id })
+            .where({ isDeleted: { $ne: true } });
 
         if (!resume) throw new NotFoundException('Not found resume');
 
@@ -85,7 +81,8 @@ export class ResumesService {
     };
 
     update = async (id: string, updateResumeDto: UpdateResumeDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const { status } = updateResumeDto;
 
@@ -111,7 +108,8 @@ export class ResumesService {
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         await this.resumeModel.updateOne(
             { _id: id },
@@ -126,5 +124,23 @@ export class ResumesService {
         return await this.resumeModel.softDelete({
             _id: id,
         });
+    };
+
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
+        const resumeRestore = await this.resumeModel.restore({ _id: id });
+        await this.resumeModel.updateOne(
+            { _id: id },
+            {
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        );
+
+        return resumeRestore;
     };
 }

@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Permission, PermissionDocument } from "./schemas/permission.schema";
+import { Permission, PermissionDocument } from './schemas/permission.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
@@ -13,7 +13,7 @@ export class PermissionsService {
     constructor(
         @InjectModel(Permission.name)
         private permissionModel: SoftDeleteModel<PermissionDocument>,
-    ) { }
+    ) {}
 
     create = async (createPermissionDto: CreatePermissionDto, user: IUser) => {
         const { name, apiPath, method, module } = createPermissionDto;
@@ -22,7 +22,7 @@ export class PermissionsService {
 
         if (permissionExist) throw new ConflictException(`Field apiPath or method already exist`);
 
-        const permission = await this.permissionModel.create({
+        return await this.permissionModel.create({
             name,
             apiPath,
             method,
@@ -32,11 +32,6 @@ export class PermissionsService {
                 email: user.email,
             },
         });
-
-        return {
-            _id: permission._id,
-            createdAt: permission.createdAt,
-        };
     };
 
     findAll = async (currentPage: number, limit: number, qs: string) => {
@@ -70,13 +65,15 @@ export class PermissionsService {
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         return await this.permissionModel.findOne({ _id: id });
     };
 
     update = async (id: string, updatePermissionDto: UpdatePermissionDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const { name, apiPath, method, module } = updatePermissionDto;
 
@@ -96,7 +93,8 @@ export class PermissionsService {
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         await this.permissionModel.updateOne(
             { _id: id },
@@ -114,7 +112,8 @@ export class PermissionsService {
     };
 
     restore = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
 
         const permissionRestore = await this.permissionModel.restore({ _id: id });
         await this.permissionModel.updateOne(
@@ -125,8 +124,8 @@ export class PermissionsService {
                     email: user.email,
                 },
             },
-        )
+        );
 
-        return permissionRestore
+        return permissionRestore;
     };
 }
