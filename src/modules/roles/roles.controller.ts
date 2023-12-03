@@ -2,30 +2,25 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
 import { TAG_MODULE_ROLES } from 'src/common/contants/swagger.contants';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { User } from 'src/common/decorators/user.decorator';
-import { Public } from 'src/common/decorators/public.decorator';
+import { ApiCreateRole, ApiDeleteRole, ApiGetListRoles, ApiGetRole, ApiRestoreRole, ApiUpdateRole } from './roles.apply-decorators';
 
 @ApiTags(TAG_MODULE_ROLES)
 @Controller('roles')
 export class RolesController {
-    constructor(private readonly rolesService: RolesService) {}
+    constructor(private readonly rolesService: RolesService) { }
 
     @Post()
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Create a new role' })
-    @ResponseMessage('Create a new role')
-    @ApiBody({ type: CreateRoleDto })
+    @ApiCreateRole()
     create(@Body() createRoleDto: CreateRoleDto, @User() user: IUser) {
         return this.rolesService.create(createRoleDto, user);
     }
 
     @Get()
-    @Public()
-    @ResponseMessage('Get roles with pagination')
+    @ApiGetListRoles()
     findAll(
         @Query('currentPage') currentPage: string,
         @Query('limit') limit: string,
@@ -35,24 +30,26 @@ export class RolesController {
     }
 
     @Get(':id')
-    @Public()
-    @ResponseMessage('Get a role')
+    @ApiGetRole()
     findOne(@Param('id') id: string) {
         return this.rolesService.findOne(id);
     }
 
     @Patch(':id')
-    @ApiBearerAuth()
-    @ApiBody({ type: UpdateRoleDto })
-    @ApiOperation({ summary: 'update a role' })
-    @ResponseMessage('Update a role')
+    @ApiUpdateRole()
     update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto, @User() user: IUser) {
         return this.rolesService.update(id, updateRoleDto, user);
     }
 
     @Delete(':id')
-    @ResponseMessage('Delete a role')
+    @ApiDeleteRole()
     remove(@Param('id') id: string, @User() user: IUser) {
         return this.rolesService.remove(id, user);
+    }
+
+    @Patch('restore/:id')
+    @ApiRestoreRole()
+    restore(@Param('id') id: string, @User() user: IUser) {
+        return this.rolesService.restore(id, user);
     }
 }

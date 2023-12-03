@@ -22,13 +22,13 @@ export class RolesService {
         @InjectModel(Role.name)
         private roleModel: SoftDeleteModel<RoleDocument>,
         private configService: ConfigService,
-    ) {}
+    ) { }
 
     create = async (createRoleDto: CreateRoleDto, user: IUser) => {
         try {
             const { name, description, isActive, permissions } = createRoleDto;
 
-            const role = await this.roleModel.create({
+            return await this.roleModel.create({
                 name,
                 description,
                 isActive,
@@ -38,11 +38,6 @@ export class RolesService {
                     email: user.email,
                 },
             });
-
-            return {
-                _id: role._id,
-                createdAt: role.createdAt,
-            };
         } catch (error) {
             if (error.code === 11000)
                 throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
@@ -102,7 +97,7 @@ export class RolesService {
     update = async (id: string, updateRoleDto: UpdateRoleDto, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
-        
+
         try {
             const { name, description, isActive, permissions } = updateRoleDto;
 
@@ -145,5 +140,22 @@ export class RolesService {
         return await this.roleModel.softDelete({
             _id: id,
         });
+    };
+
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw new BadRequestException('id must be mongooId');
+
+        const roleRestore = await this.roleModel.restore({ _id: id });
+        await this.roleModel.updateOne(
+            { _id: id },
+            {
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        )
+
+        return roleRestore
     };
 }

@@ -37,7 +37,7 @@ export const ApiGetUser = () => {
 };
 
 export const ApiUpdateUser = () => {
-    const mes = 'Update a user';
+    const mes = 'Update a user by id';
     return applyDecorators(
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
