@@ -23,6 +23,7 @@ import {
     TAG_MODULE_SUBSCRIBERS,
     TAG_MODULE_USER,
 } from 'src/common/contants/swagger.contants';
+import { Permission } from 'src/modules/permissions/schemas/permission.schema';
 import { User } from 'src/modules/users/schemas/user.schema';
 import { SwaggerTheme } from 'swagger-themes';
 
@@ -46,7 +47,7 @@ export const useSwagger = (app: INestApplication) => {
         .build();
 
     const document = SwaggerModule.createDocument(app, config, {
-        extraModels: [User],
+        extraModels: [User, Permission],
     });
 
     const theme = new SwaggerTheme('v3');
