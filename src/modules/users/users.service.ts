@@ -233,9 +233,9 @@ export class UsersService {
 
         if (!user) throw new NotFoundException('user not exist');
 
-        const userObj = user.toObject();
+        // const userObj = user.toObject();
 
-        return await this.resultUser(userObj);
+        return user;
     };
 
     findUserByToken = async (refreshToken: string) => {

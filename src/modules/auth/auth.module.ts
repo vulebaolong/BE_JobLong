@@ -13,7 +13,6 @@ import { UsersModule } from '../users/users.module';
 @Module({
     providers: [AuthService, LocalStrategy, JwtStrategy],
     imports: [
-        RolesModule,
         UsersModule,
         PassportModule,
         JwtModule.registerAsync({

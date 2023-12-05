@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Company } from 'src/modules/companies/schemas/company.schema';
 import { Role } from 'src/modules/roles/schemas/role.schema';
 
 export type UserDocument = HydratedDocument<User>;
@@ -32,9 +33,9 @@ export class User {
     @ApiProperty()
     address: string;
 
-    @Prop({ type: Object })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
     @ApiProperty()
-    company: { _id: mongoose.Schema.Types.ObjectId; name: string };
+    company: mongoose.Schema.Types.ObjectId;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
     @ApiProperty()

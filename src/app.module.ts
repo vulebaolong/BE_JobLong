@@ -10,7 +10,7 @@ import { RootModule } from './modules/root.module';
     imports: [
         ThrottlerModule.forRoot([
             {
-                ttl: 60000,
+                ttl: 60,
                 limit: 2,
             },
         ]),

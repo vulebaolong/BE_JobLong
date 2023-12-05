@@ -36,6 +36,16 @@ export const ApiGetPermission = () => {
     );
 };
 
+export const ApiGetPermissionsByUser = () => {
+    const mes = 'Get list permissions by user';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        OkResponse(mes, Permission, true),
+    );
+};
+
 export const ApiUpdatePermission = () => {
     const mes = 'Update a permission by id';
     return applyDecorators(

@@ -38,8 +38,8 @@ export class JobsController {
 
     @Get(':id')
     @ApiGetJob()
-    async findOne(@Param('id') id: string) {
-        return await this.jobsService.findOne(id);
+    async findOne(@Param('id') id: string, @Query() qs: string) {
+        return await this.jobsService.findOne(id, qs);
     }
 
     @Patch(':id')

@@ -13,7 +13,6 @@ import { IUser } from '../users/users.interface';
 export class AuthService {
     constructor(
         private usersService: UsersService,
-        private roleService: RolesService,
         private jwtService: JwtService,
         private configService: ConfigService,
     ) {}

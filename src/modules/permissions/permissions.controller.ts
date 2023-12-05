@@ -11,6 +11,7 @@ import {
     ApiDeletePermission,
     ApiGetListPermissions,
     ApiGetPermission,
+    ApiGetPermissionsByUser,
     ApiRestorePermission,
     ApiUpdatePermission,
 } from './permissions.apply-decorators';
@@ -34,6 +35,12 @@ export class PermissionsController {
         @Query() qs: string,
     ) {
         return this.permissionsService.findAll(+currentPage, +limit, qs);
+    }
+
+    @Get('by-user')
+    @ApiGetPermissionsByUser()
+    findAllByUser(@User() user: IUser) {
+        return user.permissions;
     }
 
     @Get(':id')

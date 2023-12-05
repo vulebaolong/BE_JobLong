@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { Company, CompanyDocument } from './schemas/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -59,7 +59,11 @@ export class CompaniesService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        return `This action returns a #${id} company`;
+        const company = await this.companyModel.findOne({ _id: id });
+
+        if (!company) throw new NotFoundException(`company ${id} not found`);
+
+        return company;
     };
 
     update = async (id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) => {

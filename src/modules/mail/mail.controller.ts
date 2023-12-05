@@ -35,39 +35,39 @@ export class MailController {
     @ApiSendMail()
     // @Cron("0 0 0 * * 0") // 0.00 AM every sunday
     async sendEmail() {
-        const subscribers = await this.subscriberModel.find({});
+        // const subscribers = await this.subscriberModel.find({});
 
-        for (const subs of subscribers) {
-            const subsSkills = subs.skills;
+        // for (const subs of subscribers) {
+        //     const subsSkills = subs.skills;
 
-            const jobWithMatchingSkills = await this.jobModel.find({ skills: { $in: subsSkills } });
+        //     const jobWithMatchingSkills = await this.jobModel.find({ skills: { $in: subsSkills } });
 
-            if (jobWithMatchingSkills?.length) {
-                const jobs = jobWithMatchingSkills.map((job) => {
-                    return {
-                        name: job.name,
-                        company: job.company.name,
-                        salary: `${job.salary}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' đ',
-                        skills: job.skills,
-                    };
-                });
+        //     if (jobWithMatchingSkills?.length) {
+        //         const jobs = jobWithMatchingSkills.map((job) => {
+        //             return {
+        //                 name: job.name,
+        //                 company: job.company.name,
+        //                 salary: `${job.salary}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' đ',
+        //                 skills: job.skills,
+        //             };
+        //         });
 
-                await this.mailerService.sendMail({
-                    to: 'vulebaolong@gmail.com',
-                    from: '"Support Team" <support@example.com>', // override default from
-                    subject: 'Welcome to Nice App! Confirm your Email',
-                    // html: '<b>welcome bla bla</b>', // HTML body content
-                    template: 'new-job',
-                    context: {
-                        receiver: subs.name,
-                        jobs: jobs,
-                    },
-                });
-            }
-        }
+        //         await this.mailerService.sendMail({
+        //             to: 'vulebaolong@gmail.com',
+        //             from: '"Support Team" <support@example.com>', // override default from
+        //             subject: 'Welcome to Nice App! Confirm your Email',
+        //             // html: '<b>welcome bla bla</b>', // HTML body content
+        //             template: 'new-job',
+        //             context: {
+        //                 receiver: subs.name,
+        //                 jobs: jobs,
+        //             },
+        //         });
+        //     }
+        // }
 
-        return {
-            result: 'Email sent successfully',
-        };
+        // return {
+        //     result: 'Email sent successfully',
+        // };
     }
 }

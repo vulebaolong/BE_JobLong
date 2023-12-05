@@ -60,11 +60,13 @@ export class JobsService {
         };
     };
 
-    findOne = async (id: string) => {
+    findOne = async (id: string, qs: string) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const job = await this.jobModel.findOne({ _id: id });
+        const { population } = aqp(qs);
+
+        const job = (await this.jobModel.findOne({ _id: id })).populate(population);
 
         if (!job) throw new NotFoundException('job not found');
 
