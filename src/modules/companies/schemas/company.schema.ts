@@ -23,7 +23,7 @@ export class Company {
     logo: string;
 
     // Default
-    @Prop()
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

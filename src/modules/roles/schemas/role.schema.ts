@@ -24,7 +24,7 @@ export class Role {
     permissions: Permission[];
 
     // Default
-    @Prop()
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

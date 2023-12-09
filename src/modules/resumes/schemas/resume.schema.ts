@@ -45,7 +45,7 @@ export class Resume {
     }[];
 
     // Default
-    @Prop()
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

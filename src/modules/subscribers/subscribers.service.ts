@@ -7,18 +7,17 @@ import {
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import aqp from 'api-query-params';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Subscriber, SubscriberDocument } from './schemas/subscriber.schema';
 import util from 'util';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUser } from '../users/users.interface';
 
 @Injectable()
 export class SubscribersService {
     constructor(
         @InjectModel(Subscriber.name)
-        private subscriberModel: SoftDeleteModel<SubscriberDocument>,
+        private subscriberModel: Model<SubscriberDocument>,
     ) {}
 
     create = async (createSubscriberDto: CreateSubscriberDto, user: IUser) => {
@@ -119,36 +118,32 @@ export class SubscribersService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        await this.subscriberModel.updateOne(
+        return await this.subscriberModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return await this.subscriberModel.softDelete({
-            _id: id,
-        });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const subscriberRestore = await this.subscriberModel.restore({ _id: id });
-        await this.subscriberModel.updateOne(
+        return await this.subscriberModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return subscriberRestore;
     };
 }

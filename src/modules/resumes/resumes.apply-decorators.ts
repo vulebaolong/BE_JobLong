@@ -64,7 +64,7 @@ export const ApiDeleteResume = () => {
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        OkResponse(mes, false, false, { deleted: 1 }),
+        UpdatedResponse(mes),
     );
 };
 
@@ -74,6 +74,6 @@ export const ApiRestoreResume = () => {
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        OkResponse(mes, false, false, { restored: 1 }),
+        UpdatedResponse(mes),
     );
 };

@@ -8,11 +8,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IRolePopulate, IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
@@ -28,10 +27,10 @@ export class UsersService {
 
     constructor(
         @InjectModel(User.name)
-        private userModel: SoftDeleteModel<UserDocument>,
+        private userModel: Model<UserDocument>,
 
         @InjectModel(Role.name)
-        private roleModel: SoftDeleteModel<RoleDocument>,
+        private roleModel: Model<RoleDocument>,
 
         private configService: ConfigService,
         private roleService: RolesService,
@@ -131,19 +130,33 @@ export class UsersService {
         if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN'))
             throw new BadRequestException('Cannot delete admin account');
 
-        await this.userModel.updateOne(
+        return await this.userModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
+    };
 
-        return await this.userModel.softDelete({
-            _id: id,
-        });
+    restore = async (id: string, user: IUser) => {
+        if (!mongoose.Types.ObjectId.isValid(id))
+            throw new BadRequestException('id must be mongooId');
+
+        return await this.userModel.updateOne(
+            { _id: id },
+            {
+                isDeleted: false,
+                updatedBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            },
+        );
     };
 
     updateUserToken = async (refreshToken: string, id: string) => {
@@ -163,6 +176,8 @@ export class UsersService {
 
         const totalItems = (await this.userModel.find(filter)).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
+
+        console.log('filter', filter);
 
         const result = await this.userModel
             .find(filter)

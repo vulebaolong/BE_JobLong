@@ -52,7 +52,7 @@ export class Job {
     isActive: boolean;
 
     // Default
-    @Prop()
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Resume, ResumeDocument } from './schemas/resume.schema';
 import aqp from 'api-query-params';
 import { IUser } from '../users/users.interface';
@@ -12,7 +11,7 @@ import { IUser } from '../users/users.interface';
 export class ResumesService {
     constructor(
         @InjectModel(Resume.name)
-        private resumeModel: SoftDeleteModel<ResumeDocument>,
+        private resumeModel: Model<ResumeDocument>,
     ) {}
     create = async (createResumeDto: CreateResumeDto, user: IUser) => {
         const { url, companyId, jobId } = createResumeDto;
@@ -111,36 +110,32 @@ export class ResumesService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        await this.resumeModel.updateOne(
+        return await this.resumeModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return await this.resumeModel.softDelete({
-            _id: id,
-        });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const resumeRestore = await this.resumeModel.restore({ _id: id });
-        await this.resumeModel.updateOne(
+        return await this.resumeModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return resumeRestore;
     };
 }

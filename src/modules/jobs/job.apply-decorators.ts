@@ -55,7 +55,7 @@ export const ApiDeleteJob = () => {
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        OkResponse(mes, false, false, { deleted: 1 }),
+        UpdatedResponse(mes),
     );
 };
 
@@ -65,6 +65,6 @@ export const ApiRestoreJob = () => {
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        OkResponse(mes, false, false, { restored: 1 }),
+        UpdatedResponse(mes),
     );
 };

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RootModule } from './modules/root.module';
@@ -23,7 +22,7 @@ import { RootModule } from './modules/root.module';
             useFactory: async (configService: ConfigService) => ({
                 uri: configService.get<string>('MONGODB_URI'),
                 connectionFactory: (connection) => {
-                    connection.plugin(softDeletePlugin);
+                    // connection.plugin(softDeletePlugin);
                     return connection;
                 },
             }),

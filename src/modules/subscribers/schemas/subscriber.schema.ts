@@ -19,7 +19,7 @@ export class Subscriber {
     skills: string[];
 
     // Default
-    @Prop()
+    @Prop({default: false})
     @ApiProperty()
     isDeleted: boolean;
 

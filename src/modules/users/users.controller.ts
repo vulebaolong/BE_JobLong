@@ -11,6 +11,7 @@ import {
     ApiDeleteUser,
     ApiGetListUser,
     ApiGetUser,
+    ApiRestoreUser,
     ApiUpdateUser,
 } from './users.apply-decorators';
 
@@ -55,5 +56,11 @@ export class UsersController {
     @ApiDeleteUser()
     async remove(@Param('id') id: string, @User() user: IUser) {
         return await this.usersService.remove(id, user);
+    }
+
+    @Patch('restore/:id')
+    @ApiRestoreUser()
+    restore(@Param('id') id: string, @User() user: IUser) {
+        return this.usersService.restore(id, user);
     }
 }

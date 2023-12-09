@@ -52,6 +52,16 @@ export const ApiDeleteUser = () => {
         ApiBearerAuth(),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
-        OkResponse(mes, false, false, { deleted: 1 }),
+        UpdatedResponse(mes),
+    );
+};
+
+export const ApiRestoreUser = () => {
+    const mes = 'Restore a user by id';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        UpdatedResponse(mes),
     );
 };

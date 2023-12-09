@@ -8,9 +8,8 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role, RoleDocument } from './schemas/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import util from 'util';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
 import { ADMIN_ROLE } from 'src/modules/databases/sample';
@@ -20,7 +19,7 @@ import { IUser } from '../users/users.interface';
 export class RolesService {
     constructor(
         @InjectModel(Role.name)
-        private roleModel: SoftDeleteModel<RoleDocument>,
+        private roleModel: Model<RoleDocument>,
         private configService: ConfigService,
     ) {}
 
@@ -127,36 +126,32 @@ export class RolesService {
         const role = await this.roleModel.findById(id);
         if (role.name === ADMIN_ROLE) throw new BadRequestException('Cannot delete ROLE_ADMIN');
 
-        await this.roleModel.updateOne(
+        return await this.roleModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return await this.roleModel.softDelete({
-            _id: id,
-        });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const roleRestore = await this.roleModel.restore({ _id: id });
-        await this.roleModel.updateOne(
+        return await this.roleModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return roleRestore;
     };
 }

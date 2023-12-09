@@ -2,13 +2,13 @@ import { Controller, Get, Logger } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectModel } from '@nestjs/mongoose';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 // import { Cron, CronExpression } from '@nestjs/schedule';
 import { ApiTags } from '@nestjs/swagger';
 import { Subscriber, SubscriberDocument } from 'src/modules/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from '../jobs/schemas/job.schemas';
 import { TAG_MODULE_MAIL } from 'src/common/contants/swagger.contants';
 import { ApiSendMail } from './mail.apply-decorators';
+import { Model } from 'mongoose';
 
 @ApiTags(TAG_MODULE_MAIL)
 @Controller('mail')
@@ -17,10 +17,10 @@ export class MailController {
 
     constructor(
         @InjectModel(Subscriber.name)
-        private subscriberModel: SoftDeleteModel<SubscriberDocument>,
+        private subscriberModel: Model<SubscriberDocument>,
 
         @InjectModel(Job.name)
-        private jobModel: SoftDeleteModel<JobDocument>,
+        private jobModel: Model<JobDocument>,
 
         private readonly mailService: MailService,
         private mailerService: MailerService,

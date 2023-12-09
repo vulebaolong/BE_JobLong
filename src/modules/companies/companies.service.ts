@@ -2,9 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { Company, CompanyDocument } from './schemas/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUser } from '../users/users.interface';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
@@ -12,7 +11,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 export class CompaniesService {
     constructor(
         @InjectModel(Company.name)
-        private companyModel: SoftDeleteModel<CompanyDocument>,
+        private companyModel: Model<CompanyDocument>,
     ) {}
 
     create = async (createCompanyDto: CreateCompanyDto, user: IUser) => {
@@ -86,33 +85,32 @@ export class CompaniesService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        await this.companyModel.updateOne(
+        return await this.companyModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-        return await this.companyModel.softDelete({ _id: id });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const companyRestore = await this.companyModel.restore({ _id: id });
-        await this.companyModel.updateOne(
+        return await this.companyModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return companyRestore;
     };
 }

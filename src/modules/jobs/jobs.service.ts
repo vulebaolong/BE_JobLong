@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Job, JobDocument } from './schemas/job.schemas';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import aqp from 'api-query-params';
 import { IUser } from '../users/users.interface';
 
@@ -12,7 +11,7 @@ import { IUser } from '../users/users.interface';
 export class JobsService {
     constructor(
         @InjectModel(Job.name)
-        private jobModel: SoftDeleteModel<JobDocument>,
+        private jobModel: Model<JobDocument>,
     ) {}
 
     create = async (createJobDto: CreateJobDto, user: IUser) => {
@@ -51,12 +50,12 @@ export class JobsService {
 
         return {
             meta: {
-                currentPage, //trang hiện tại
-                pageSize: limit, //số lượng bản ghi đã lấy
-                totalPages, //tổng số trang với điều kiện query
-                totalItems, // tổng số phần tử (số bản ghi)
+                currentPage, 
+                pageSize: limit, 
+                totalPages, 
+                totalItems, 
             },
-            result, //kết quả query
+            result,
         };
     };
 
@@ -93,36 +92,32 @@ export class JobsService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        await this.jobModel.updateOne(
+        return await this.jobModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return await this.jobModel.softDelete({
-            _id: id,
-        });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const roleRestore = await this.jobModel.restore({ _id: id });
-        await this.jobModel.updateOne(
+        return await this.jobModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return roleRestore;
     };
 }

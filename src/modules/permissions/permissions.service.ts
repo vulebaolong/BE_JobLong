@@ -3,16 +3,16 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Permission, PermissionDocument } from './schemas/permission.schema';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
 import { IUser } from '../users/users.interface';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PermissionsService {
     constructor(
         @InjectModel(Permission.name)
-        private permissionModel: SoftDeleteModel<PermissionDocument>,
+        private permissionModel: Model<PermissionDocument>,
     ) {}
 
     create = async (createPermissionDto: CreatePermissionDto, user: IUser) => {
@@ -96,36 +96,32 @@ export class PermissionsService {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        await this.permissionModel.updateOne(
+        return await this.permissionModel.updateOne(
             { _id: id },
             {
+                isDeleted: true,
+                deletedAt: Date.now(),
                 deletedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return await this.permissionModel.softDelete({
-            _id: id,
-        });
     };
 
     restore = async (id: string, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
-        const permissionRestore = await this.permissionModel.restore({ _id: id });
-        await this.permissionModel.updateOne(
+        return await this.permissionModel.updateOne(
             { _id: id },
             {
+                isDeleted: false,
                 updatedBy: {
                     _id: user._id,
                     email: user.email,
                 },
             },
         );
-
-        return permissionRestore;
     };
 }
