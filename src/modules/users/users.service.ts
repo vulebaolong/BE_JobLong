@@ -276,6 +276,7 @@ export class UsersService {
             _id: user._id.toString(),
             email: user.email,
             name: user.name,
+            avatar: user.avatar,
             password: user.password,
             role: {
                 _id: role._id.toString(),

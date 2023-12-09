@@ -24,7 +24,7 @@ export class AuthService {
         const isValid = this.usersService.isValidPassword(pass, user.password);
         if (!isValid) return null;
 
-        return user;
+        return user.toObject();
     };
 
     createRefreshToken = (payload: any) => {
@@ -51,7 +51,7 @@ export class AuthService {
     };
 
     login = async (user: IUser, response: Response, sub = 'token login') => {
-        const { _id, name, email, role, permissions } = user;
+        const { _id, name, email, role, permissions, avatar } = user;
 
         const payload: IPayloadToken = {
             sub,
@@ -78,6 +78,7 @@ export class AuthService {
                 _id,
                 name,
                 email,
+                avatar,
                 role,
                 permissions,
             },
