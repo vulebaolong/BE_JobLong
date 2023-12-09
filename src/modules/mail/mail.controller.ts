@@ -36,12 +36,9 @@ export class MailController {
     // @Cron("0 0 0 * * 0") // 0.00 AM every sunday
     async sendEmail() {
         // const subscribers = await this.subscriberModel.find({});
-
         // for (const subs of subscribers) {
         //     const subsSkills = subs.skills;
-
         //     const jobWithMatchingSkills = await this.jobModel.find({ skills: { $in: subsSkills } });
-
         //     if (jobWithMatchingSkills?.length) {
         //         const jobs = jobWithMatchingSkills.map((job) => {
         //             return {
@@ -51,7 +48,6 @@ export class MailController {
         //                 skills: job.skills,
         //             };
         //         });
-
         //         await this.mailerService.sendMail({
         //             to: 'vulebaolong@gmail.com',
         //             from: '"Support Team" <support@example.com>', // override default from
@@ -65,7 +61,6 @@ export class MailController {
         //         });
         //     }
         // }
-
         // return {
         //     result: 'Email sent successfully',
         // };

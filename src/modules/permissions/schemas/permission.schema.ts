@@ -23,7 +23,7 @@ export class Permission {
     module: string;
 
     // Default
-    @Prop({default: false})
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

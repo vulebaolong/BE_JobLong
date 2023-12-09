@@ -46,7 +46,7 @@ export class User {
     refreshToken: string;
 
     // Default
-    @Prop({default: false})
+    @Prop({ default: false })
     @ApiProperty()
     isDeleted: boolean;
 

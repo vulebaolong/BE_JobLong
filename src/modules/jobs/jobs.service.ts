@@ -50,10 +50,10 @@ export class JobsService {
 
         return {
             meta: {
-                currentPage, 
-                pageSize: limit, 
-                totalPages, 
-                totalItems, 
+                currentPage,
+                pageSize: limit,
+                totalPages,
+                totalItems,
             },
             result,
         };
