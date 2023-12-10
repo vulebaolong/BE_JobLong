@@ -2,20 +2,10 @@ import {
     IsEmail,
     IsMongoId,
     IsNotEmpty,
-    IsNotEmptyObject,
-    IsObject,
-    ValidateNested,
+    IsOptional,
 } from 'class-validator';
-import mongoose, { ObjectId } from 'mongoose';
-import { Type } from 'class-transformer';
-
-export class Company {
-    @IsNotEmpty({ message: 'Field company._id cannot be empty' })
-    _id: mongoose.Schema.Types.ObjectId;
-
-    @IsNotEmpty({ message: 'Field company.name cannot be empty' })
-    name: string;
-}
+import { ObjectId } from 'mongoose';
+import { PartialType } from '@nestjs/swagger';
 
 export class CreateUserDto {
     @IsNotEmpty({ message: 'Field name cannot be empty' })
@@ -37,15 +27,16 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'Field address cannot be empty' })
     address: string;
 
+    @IsOptional()
     @IsNotEmpty({ message: 'Field role cannot be empty' })
     @IsMongoId({ message: 'Field role must be mongooId' })
     role: ObjectId;
+}
 
-    @IsObject({ message: 'Field company must be object' })
-    @IsNotEmptyObject({}, { message: 'Field company cannot be object empty' })
-    @ValidateNested()
-    @Type(() => Company)
-    company: Company;
+export class CreateUserHrDto extends PartialType(CreateUserDto) {
+    @IsNotEmpty({ message: 'Field company cannot be empty' })
+    @IsMongoId({ message: 'Field company must be mongooId' })
+    company: ObjectId;
 }
 
 // export class RegisterUserDto extends CreateUserDto{
@@ -53,4 +44,9 @@ export class CreateUserDto {
 //     @IsNotEmpty({ message: 'Field role cannot be empty' })
 //     @IsMongoId({ message: 'Field role must be mongooId' })
 //     role: ObjectId;
+// @IsObject({ message: 'Field company must be object' })
+// @IsNotEmptyObject({}, { message: 'Field company cannot be object empty' })
+// @ValidateNested()
+// @Type(() => Company)
+// company: Company;
 // }

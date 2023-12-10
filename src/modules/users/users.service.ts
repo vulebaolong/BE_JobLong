@@ -10,16 +10,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserHrDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IRolePopulate, IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
-import { USER_ROLE } from 'src/modules/databases/sample';
 import { RegisterDto } from 'src/modules/auth/dto/register.dto';
 import { Role, RoleDocument } from '../roles/schemas/role.schema';
 import { RolesService } from '../roles/roles.service';
 import { plainToClass } from 'class-transformer';
+import { ROLE_HR, ROLE_USER } from 'src/common/contants/role.contants';
 
 @Injectable()
 export class UsersService {
@@ -45,12 +45,15 @@ export class UsersService {
         return bcrypt.compareSync(password, hash);
     };
 
-    create = async (createUserDto: CreateUserDto, user: IUser) => {
+    createUser = async (createUserDto: CreateUserDto, user: IUser) => {
         try {
             const hashPassword = await this.hashPassword(createUserDto.password);
 
+            const roleUser = await this.roleModel.findOne({name: ROLE_USER})
+
             const userNew = await this.userModel.create({
                 ...createUserDto,
+                role: roleUser._id,
                 password: hashPassword,
                 createdBy: {
                     _id: user._id,
@@ -65,6 +68,31 @@ export class UsersService {
         }
     };
 
+    createUserHr = async (createUserHrDto: CreateUserHrDto, user: IUser) => {
+        try {
+            const hashPassword = await this.hashPassword(createUserHrDto.password);
+
+            const roleHr = await this.roleModel.findOne({name: "ROLE_HR"})
+            this.logger.debug(roleHr)
+
+            const userNew = await this.userModel.create({
+                ...createUserHrDto,
+                role: roleHr._id,
+                password: hashPassword,
+                createdBy: {
+                    _id: user._id,
+                    email: user.email,
+                },
+            });
+
+            return plainToClass(User, userNew.toObject());
+        } catch (error) {
+            this.logger.debug(error)
+            if (error.code === 11000) throw new ConflictException('user already exists');
+            throw new InternalServerErrorException(error.message);
+        }
+    };
+
     register = async (registerDto: RegisterDto): Promise<UserDocument> => {
         try {
             const { name, email, password, age, gender, address } = registerDto;
@@ -73,11 +101,11 @@ export class UsersService {
 
             if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
 
-            const userRole = await this.roleModel.findOne({ name: USER_ROLE });
+            const userRole = await this.roleModel.findOne({ name: ROLE_USER });
 
             if (!userRole)
                 throw new BadRequestException(
-                    `There is no ${USER_ROLE} data in the database to assign a default value to the user`,
+                    `There is no ${ROLE_USER} data in the database to assign a default value to the user`,
                 );
 
             const hashPassword = await this.hashPassword(password);

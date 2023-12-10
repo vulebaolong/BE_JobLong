@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserHrDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from './users.interface';
@@ -8,6 +8,7 @@ import { TAG_MODULE_USER } from 'src/common/contants/swagger.contants';
 import { User } from 'src/common/decorators/user.decorator';
 import {
     ApiCreateUser,
+    ApiCreateUserHr,
     ApiDeleteUser,
     ApiGetListUser,
     ApiGetUser,
@@ -22,8 +23,14 @@ export class UsersController {
 
     @Post()
     @ApiCreateUser()
-    async create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
-        return await this.usersService.create(createUserDto, user);
+    async createUser(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
+        return await this.usersService.createUser(createUserDto, user);
+    }
+
+    @Post('hr')
+    @ApiCreateUserHr()
+    async createUserHr(@Body() createUserHrDto: CreateUserHrDto, @User() user: IUser) {
+        return await this.usersService.createUserHr(createUserHrDto, user);
     }
 
     @Get()

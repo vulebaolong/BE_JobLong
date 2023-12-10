@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserHrDto } from './dto/create-user.dto';
 import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
 import { User, UserResSwagger } from './schemas/user.schema';
 
@@ -10,6 +10,17 @@ export const ApiCreateUser = () => {
     return applyDecorators(
         ApiBearerAuth(),
         ApiBody({ type: CreateUserDto }),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        CreatedResponse(mes, User),
+    );
+};
+
+export const ApiCreateUserHr = () => {
+    const mes = 'Create a user hr by admin';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiBody({ type: CreateUserHrDto }),
         ApiOperation({ summary: mes }),
         ResponseMessage(mes),
         CreatedResponse(mes, User),

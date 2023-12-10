@@ -12,8 +12,8 @@ import util from 'util';
 import mongoose, { Model } from 'mongoose';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
-import { ADMIN_ROLE } from 'src/modules/databases/sample';
 import { IUser } from '../users/users.interface';
+import { ROLE_ADMIN } from 'src/common/contants/role.contants';
 
 @Injectable()
 export class RolesService {
@@ -124,7 +124,7 @@ export class RolesService {
             throw new BadRequestException('id must be mongooId');
 
         const role = await this.roleModel.findById(id);
-        if (role.name === ADMIN_ROLE) throw new BadRequestException('Cannot delete ROLE_ADMIN');
+        if (role.name === ROLE_ADMIN) throw new BadRequestException('Cannot delete ROLE_ADMIN');
 
         return await this.roleModel.updateOne(
             { _id: id },

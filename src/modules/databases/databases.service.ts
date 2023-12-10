@@ -1,12 +1,13 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { ADMIN_ROLE, INIT_PERMISSIONS, USER_ROLE } from './sample';
+import { INIT_PERMISSIONS } from './sample';
 import { User, UserDocument } from '../users/schemas/user.schema';
 import { Permission, PermissionDocument } from '../permissions/schemas/permission.schema';
 import { Role, RoleDocument } from '../roles/schemas/role.schema';
 import { UsersService } from '../users/users.service';
 import { Model } from 'mongoose';
+import { ROLE_ADMIN, ROLE_USER } from 'src/common/contants/role.contants';
 
 @Injectable()
 export class DatabasesService implements OnModuleInit {
@@ -62,13 +63,13 @@ export class DatabasesService implements OnModuleInit {
         const permissions = await this.permissionModel.find({}).select('_id');
         await this.roleModel.insertMany([
             {
-                name: ADMIN_ROLE,
+                name: ROLE_ADMIN,
                 description: 'Admin thì full quyền :v',
                 isActive: true,
                 permissions: permissions,
             },
             {
-                name: USER_ROLE,
+                name: ROLE_USER,
                 description: 'Người dùng/Ứng viên sử dụng hệ thống',
                 isActive: true,
                 permissions: [], //không set quyền, chỉ cần add ROLE
@@ -77,8 +78,8 @@ export class DatabasesService implements OnModuleInit {
     };
 
     createUser = async () => {
-        const adminRole = await this.roleModel.findOne({ name: ADMIN_ROLE });
-        const userRole = await this.roleModel.findOne({ name: USER_ROLE });
+        const adminRole = await this.roleModel.findOne({ name: ROLE_ADMIN });
+        const userRole = await this.roleModel.findOne({ name: ROLE_USER });
         await this.userModel.insertMany([
             {
                 name: "I'm admin",
