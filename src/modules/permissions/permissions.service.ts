@@ -1,3 +1,4 @@
+import { RolesService } from './../roles/roles.service';
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
@@ -7,12 +8,15 @@ import aqp from 'api-query-params';
 import mongoose from 'mongoose';
 import { IUser } from '../users/users.interface';
 import { Model } from 'mongoose';
+import { RoleDocument } from '../roles/schemas/role.schema';
 
 @Injectable()
 export class PermissionsService {
     constructor(
         @InjectModel(Permission.name)
         private permissionModel: Model<PermissionDocument>,
+
+        private rolesService: RolesService,
     ) {}
 
     create = async (createPermissionDto: CreatePermissionDto, user: IUser) => {
@@ -69,6 +73,11 @@ export class PermissionsService {
             throw new BadRequestException('id must be mongooId');
 
         return await this.permissionModel.findOne({ _id: id });
+    };
+
+    findAllByUser = async (user: IUser) => {
+        const role = await this.rolesService.findOne(user.role._id);
+        return role.permissions;
     };
 
     update = async (id: string, updatePermissionDto: UpdatePermissionDto, user: IUser) => {

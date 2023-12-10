@@ -40,7 +40,7 @@ export class PermissionsController {
     @Get('by-user')
     @ApiGetPermissionsByUser()
     findAllByUser(@User() user: IUser) {
-        return user.permissions;
+        return this.permissionsService.findAllByUser(user);
     }
 
     @Get(':id')

@@ -1,5 +1,3 @@
-
-
 export const INIT_PERMISSIONS = [
     {
         _id: '648ab415f4328bd3153ee211',

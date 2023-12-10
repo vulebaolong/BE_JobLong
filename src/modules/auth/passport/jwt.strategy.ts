@@ -5,12 +5,15 @@ import { ConfigService } from '@nestjs/config';
 import { IPayloadToken } from '../auth.interface';
 import { UsersService } from 'src/modules/users/users.service';
 import { RolesService } from 'src/modules/roles/roles.service';
+import { PermissionsService } from 'src/modules/permissions/permissions.service';
+import { IUser } from 'src/modules/users/users.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
         private readonly configService: ConfigService,
         private usersService: UsersService,
+        private permissionsService: PermissionsService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -20,7 +23,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: IPayloadToken) {
-        const user = await this.usersService.findOneById(payload._id);
-        return user;
+        const user: IUser = (await this.usersService.findOne(payload._id)).toObject();
+        const permissions = await this.permissionsService.findAllByUser(user);
+        const reuslt = {
+            ...user,
+            permissions: permissions,
+        };
+        return reuslt;
     }
 }

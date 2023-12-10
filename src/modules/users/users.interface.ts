@@ -8,7 +8,6 @@ export interface IUser {
     email: string;
     avatar: string;
     role: IRolePopulate;
-    permissions?: Permission[];
 }
 
 export interface IUserMongoo {

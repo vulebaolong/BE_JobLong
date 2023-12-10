@@ -1,9 +1,4 @@
-import {
-    IsEmail,
-    IsMongoId,
-    IsNotEmpty,
-    IsOptional,
-} from 'class-validator';
+import { IsEmail, IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
 import { ObjectId } from 'mongoose';
 import { PartialType } from '@nestjs/swagger';
 

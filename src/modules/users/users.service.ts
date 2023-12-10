@@ -29,9 +29,6 @@ export class UsersService {
         @InjectModel(User.name)
         private userModel: Model<UserDocument>,
 
-        @InjectModel(Role.name)
-        private roleModel: Model<RoleDocument>,
-
         private configService: ConfigService,
         private roleService: RolesService,
     ) {}
@@ -49,7 +46,7 @@ export class UsersService {
         try {
             const hashPassword = await this.hashPassword(createUserDto.password);
 
-            const roleUser = await this.roleModel.findOne({name: ROLE_USER})
+            const roleUser = await this.roleService.findOneByName(ROLE_USER);
 
             const userNew = await this.userModel.create({
                 ...createUserDto,
@@ -72,8 +69,7 @@ export class UsersService {
         try {
             const hashPassword = await this.hashPassword(createUserHrDto.password);
 
-            const roleHr = await this.roleModel.findOne({name: "ROLE_HR"})
-            this.logger.debug(roleHr)
+            const roleHr = await this.roleService.findOneByName(ROLE_HR);
 
             const userNew = await this.userModel.create({
                 ...createUserHrDto,
@@ -87,7 +83,7 @@ export class UsersService {
 
             return plainToClass(User, userNew.toObject());
         } catch (error) {
-            this.logger.debug(error)
+            this.logger.debug(error);
             if (error.code === 11000) throw new ConflictException('user already exists');
             throw new InternalServerErrorException(error.message);
         }
@@ -101,7 +97,7 @@ export class UsersService {
 
             if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
 
-            const userRole = await this.roleModel.findOne({ name: ROLE_USER });
+            const userRole = await this.roleService.findOneByName(ROLE_USER);
 
             if (!userRole)
                 throw new BadRequestException(
@@ -129,7 +125,6 @@ export class UsersService {
     update = async (id: string, updateUserDto: UpdateUserDto, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
-
         try {
             return await this.userModel.updateOne(
                 { _id: id },
@@ -205,8 +200,6 @@ export class UsersService {
         const totalItems = (await this.userModel.find(filter)).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
-        console.log('filter', filter);
-
         const result = await this.userModel
             .find(filter)
             .skip(offset)
@@ -228,45 +221,35 @@ export class UsersService {
     };
 
     // Get all value a user
-    findOne = async (id: string) => {
+    findOne = async (id: string, ps?: string) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');
 
         const user = await this.userModel
             .findOne({ _id: id })
             .select('-password -refreshToken')
-            .populate<IRolePopulate>({ path: 'role', select: 'name' });
+            .populate<IRolePopulate>([
+                { path: 'role', select: 'name' },
+                { path: 'company', select: 'name' },
+            ]);
 
         if (!user) throw new NotFoundException('user not exist');
 
-        const userObj = user.toObject();
+        return user;
 
-        if (!('_id' in userObj.role))
-            throw new BadRequestException(`Role: ${userObj.role} not exsit in collection role`);
+        // const userObj = user.toObject();
 
-        const role = await this.roleService.findOne(userObj.role._id.toString());
+        // if (!('_id' in userObj.role))
+        //     throw new BadRequestException(`Role: ${userObj.role} not exsit in collection role`);
 
-        const result = {
-            ...userObj,
-            permissions: role.permissions,
-        };
+        // const role = await this.roleService.findOne(userObj.role._id.toString());
 
-        return result;
-    };
+        // const result = {
+        //     ...userObj,
+        //     permissions: role.permissions,
+        // };
 
-    findOneById = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
-
-        const user = await this.userModel
-            .findOne({ _id: id })
-            .select('-password')
-            .populate({ path: 'role', select: { name: 1 } });
-
-        if (!('_id' in user.role))
-            throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
-
-        return await this.resultUser(user);
+        // return result;
     };
 
     findOneByUsername = async (username: string) => {
@@ -281,7 +264,7 @@ export class UsersService {
         return user;
     };
 
-    findUserByToken = async (refreshToken: string) => {
+    findUserByToken = async (refreshToken: string): Promise<IUser> => {
         const user = await this.userModel
             .findOne({ refreshToken })
             .select('-password')
@@ -289,30 +272,28 @@ export class UsersService {
 
         if (!user) throw new NotFoundException('user not exist');
 
-        const userObj = user.toObject();
-
-        return await this.resultUser(userObj);
+        return user.toObject();
     };
 
-    resultUser = async (user: any) => {
-        if (!('_id' in user.role))
-            throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
+    // resultUser = async (user: any) => {
+    //     if (!('_id' in user.role))
+    //         throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
 
-        const role = await this.roleService.findOne(user.role._id.toString());
+    //     const role = await this.roleService.findOne(user.role._id.toString());
 
-        const result: IUser = {
-            _id: user._id.toString(),
-            email: user.email,
-            name: user.name,
-            avatar: user.avatar,
-            password: user.password,
-            role: {
-                _id: role._id.toString(),
-                name: role.name,
-            },
-            permissions: role.permissions,
-        };
+    //     const result: IUser = {
+    //         _id: user._id.toString(),
+    //         email: user.email,
+    //         name: user.name,
+    //         avatar: user.avatar,
+    //         password: user.password,
+    //         role: {
+    //             _id: role._id.toString(),
+    //             name: role.name,
+    //         },
+    //         permissions: role.permissions,
+    //     };
 
-        return result;
-    };
+    //     return result;
+    // };
 }

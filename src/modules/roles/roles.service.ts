@@ -93,6 +93,14 @@ export class RolesService {
         return role;
     };
 
+    findOneByName = async (name: string) => {
+        const role = await this.roleModel.findOne({ name: name });
+
+        if (!role) throw new NotFoundException('role not found');
+
+        return role;
+    };
+
     update = async (id: string, updateRoleDto: UpdateRoleDto, user: IUser) => {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException('id must be mongooId');

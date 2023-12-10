@@ -45,8 +45,8 @@ export class UsersController {
 
     @Get(':id')
     @ApiGetUser()
-    async findOne(@Param('id') id: string) {
-        return await this.usersService.findOne(id);
+    async findOne(@Param('id') id: string, @Query() qs: string) {
+        return await this.usersService.findOne(id, qs);
     }
 
     @Patch(':id')

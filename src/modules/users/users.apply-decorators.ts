@@ -57,6 +57,16 @@ export const ApiUpdateUser = () => {
     );
 };
 
+export const ApiUpdateUserHr = () => {
+    const mes = 'Update a user hr by id';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        UpdatedResponse(mes),
+    );
+};
+
 export const ApiDeleteUser = () => {
     const mes = 'Delete a user by id';
     return applyDecorators(

@@ -9,12 +9,14 @@ import ms from 'ms';
 import { AuthController } from './auth.controller';
 import { RolesModule } from '../roles/roles.module';
 import { UsersModule } from '../users/users.module';
+import { PermissionsModule } from '../permissions/permissions.module';
 
 @Module({
     providers: [AuthService, LocalStrategy, JwtStrategy],
     imports: [
         UsersModule,
         PassportModule,
+        PermissionsModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
