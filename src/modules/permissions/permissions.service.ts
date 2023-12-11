@@ -8,7 +8,6 @@ import aqp from 'api-query-params';
 import mongoose from 'mongoose';
 import { IUser } from '../users/users.interface';
 import { Model } from 'mongoose';
-import { RoleDocument } from '../roles/schemas/role.schema';
 
 @Injectable()
 export class PermissionsService {
@@ -38,7 +37,7 @@ export class PermissionsService {
         });
     };
 
-    findAll = async (currentPage: number, limit: number, qs: string) => {
+    findAll = async (currentPage: number, limit: number, qs: any) => {
         const { filter, sort, population } = aqp(qs);
         delete filter.currentPage;
         delete filter.limit;
@@ -46,17 +45,18 @@ export class PermissionsService {
         const offset = (+currentPage - 1) * +limit;
         const defaultLimit = +limit ? +limit : 10;
 
-        const totalItems = (await this.permissionModel.find(filter)).length;
+        const totalItems = (await this.permissionModel.find({...filter, apiPath:  new RegExp(qs.apiPath)})).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
+        
         const result = await this.permissionModel
-            .find(filter)
+            .find({...filter, apiPath:  new RegExp(qs.apiPath)})
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
             .populate(population)
             .exec();
-
+        console.log(result)
         return {
             meta: {
                 currentPage,
