@@ -16,7 +16,6 @@ import { IRolePopulate, IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
 import { RegisterDto } from 'src/modules/auth/dto/register.dto';
-import { Role, RoleDocument } from '../roles/schemas/role.schema';
 import { RolesService } from '../roles/roles.service';
 import { plainToClass } from 'class-transformer';
 import { ROLE_HR, ROLE_USER } from 'src/common/contants/role.contants';
@@ -190,7 +189,7 @@ export class UsersService {
     };
 
     findAll = async (currentPage: number, limit: number, ps: string) => {
-        const { filter, sort, population } = aqp(ps);
+        const { filter, sort, population, projection } = aqp(ps);
         delete filter.currentPage;
         delete filter.limit;
 
@@ -205,7 +204,7 @@ export class UsersService {
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
-            .select('-password')
+            .select({...projection, password: 0})
             .populate(population)
             .exec();
 

@@ -5,6 +5,7 @@ import {
     IsDefined,
     IsMongoId,
     IsNotEmpty,
+    IsOptional,
     IsString,
 } from 'class-validator';
 import { ObjectId } from 'mongoose';
@@ -23,6 +24,7 @@ export class CreateRoleDto {
     @IsBoolean({ message: 'Field isActive must be boolean' })
     isActive: boolean;
 
+    @IsOptional()
     @IsNotEmpty({ message: 'Field permissions cannot be empty' })
     @ArrayNotEmpty({ message: 'Field permissions cannot be array empty' })
     @IsArray({ message: 'Field permissions must be array' })

@@ -38,7 +38,7 @@ export class PermissionsService {
     };
 
     findAll = async (currentPage: number, limit: number, qs: any) => {
-        const { filter, sort, population } = aqp(qs);
+        const { filter, sort, population, projection } = aqp(qs);
         delete filter.currentPage;
         delete filter.limit;
 
@@ -48,15 +48,17 @@ export class PermissionsService {
         const totalItems = (await this.permissionModel.find({...filter, apiPath:  new RegExp(qs.apiPath)})).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
+        console.log(projection)
         
         const result = await this.permissionModel
             .find({...filter, apiPath:  new RegExp(qs.apiPath)})
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
+            .select(projection)
             .populate(population)
             .exec();
-        console.log(result)
+
         return {
             meta: {
                 currentPage,
