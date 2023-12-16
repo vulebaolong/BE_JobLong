@@ -30,7 +30,7 @@ export class JobsService {
     };
 
     findAll = async (currentPage: number, limit: number, qs: string) => {
-        const { filter, sort, population } = aqp(qs);
+        const { filter, sort, population, projection } = aqp(qs);
         delete filter.currentPage;
         delete filter.limit;
 
@@ -40,11 +40,14 @@ export class JobsService {
         const totalItems = (await this.jobModel.find(filter)).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
+        console.log(projection);
+
         const result = await this.jobModel
             .find(filter)
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
+            .select(projection)
             .populate(population)
             .exec();
 

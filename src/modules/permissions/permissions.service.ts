@@ -48,8 +48,6 @@ export class PermissionsService {
         const totalItems = (await this.permissionModel.find({...filter, apiPath:  new RegExp(qs.apiPath)})).length;
         const totalPages = Math.ceil(totalItems / defaultLimit);
 
-        console.log(projection)
-        
         const result = await this.permissionModel
             .find({...filter, apiPath:  new RegExp(qs.apiPath)})
             .skip(offset)

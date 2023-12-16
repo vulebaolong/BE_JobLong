@@ -4,6 +4,7 @@ import {
     IsArray,
     IsBoolean,
     IsDate,
+    IsMongoId,
     IsNotEmpty,
     IsNotEmptyObject,
     IsNumber,
@@ -11,7 +12,7 @@ import {
     IsString,
     ValidateNested,
 } from 'class-validator';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 export class Company {
     @IsNotEmpty({ message: 'Field company._id cannot be empty' })
@@ -33,11 +34,9 @@ export class CreateJobDto {
     @IsString({ each: true, message: 'item of array skills must be string' })
     skills: string[];
 
-    @IsObject({ message: 'Field company must be object' })
-    @IsNotEmptyObject({}, { message: 'Field company can not object empty' })
-    @ValidateNested()
-    @Type(() => Company)
-    company: Company;
+    @IsNotEmpty({ message: 'Field company cannot be empty' })
+    @IsMongoId({ message: 'Field company must be mongooId' })
+    company: ObjectId;
 
     @IsNotEmpty({ message: 'Field location cannot be empty' })
     location: string;
