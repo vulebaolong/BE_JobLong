@@ -1,24 +1,30 @@
-import { IsEmail, IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEmail, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ObjectId } from 'mongoose';
 import { PartialType } from '@nestjs/swagger';
 
 export class CreateUserDto {
+    @IsString()
     @IsNotEmpty({ message: 'Field name cannot be empty' })
     name: string;
 
+    @IsString()
     @IsEmail({}, { message: 'Field email must be type email' })
     @IsNotEmpty({ message: 'Field email cannot be empty' })
     email: string;
 
+    @IsString()
     @IsNotEmpty({ message: 'Field password cannot be empty' })
     password: string;
 
+    @IsNumber()
     @IsNotEmpty({ message: 'Field age cannot be empty' })
     age: number;
 
+    @IsString()
     @IsNotEmpty({ message: 'Field gender cannot be empty' })
     gender: string;
 
+    @IsString()
     @IsNotEmpty({ message: 'Field address cannot be empty' })
     address: string;
 
@@ -33,15 +39,3 @@ export class CreateUserHrDto extends PartialType(CreateUserDto) {
     @IsMongoId({ message: 'Field company must be mongooId' })
     company: ObjectId;
 }
-
-// export class RegisterUserDto extends CreateUserDto{
-//     @ApiProperty()
-//     @IsNotEmpty({ message: 'Field role cannot be empty' })
-//     @IsMongoId({ message: 'Field role must be mongooId' })
-//     role: ObjectId;
-// @IsObject({ message: 'Field company must be object' })
-// @IsNotEmptyObject({}, { message: 'Field company cannot be object empty' })
-// @ValidateNested()
-// @Type(() => Company)
-// company: Company;
-// }

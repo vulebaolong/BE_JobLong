@@ -26,12 +26,7 @@ export class AuthController {
     @Post('register')
     @ApiRegister()
     async handleRegister(@Body() register: RegisterDto) {
-        const newUser = await this.authService.register(register);
-
-        return {
-            _id: newUser._id, //id của user được tạo
-            createdAt: newUser.createdAt, //thời gian tạo user
-        };
+        return await this.authService.register(register);
     }
 
     @Get('refresh')

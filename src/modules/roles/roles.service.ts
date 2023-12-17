@@ -2,6 +2,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    Logger,
     NotFoundException,
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -17,6 +18,8 @@ import { ROLE_ADMIN } from 'src/common/contants/role.contants';
 
 @Injectable()
 export class RolesService {
+    private readonly logger = new Logger(RolesService.name);
+
     constructor(
         @InjectModel(Role.name)
         private roleModel: Model<RoleDocument>,
@@ -40,72 +43,89 @@ export class RolesService {
         } catch (error) {
             if (error.code === 11000)
                 throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            this.logger.error(error);
+            throw error;
         }
     };
 
     findAll = async (currentPage: number, limit: number, qs: string) => {
-        const { filter, sort, population } = aqp(qs);
-        delete filter.currentPage;
-        delete filter.limit;
+        try {
+            const { filter, sort, population } = aqp(qs);
+            delete filter.currentPage;
+            delete filter.limit;
 
-        const offset = (+currentPage - 1) * +limit;
-        const defaultLimit = +limit ? +limit : 10;
+            const offset = (+currentPage - 1) * +limit;
+            const defaultLimit = +limit ? +limit : 10;
 
-        const totalItems = (await this.roleModel.find(filter)).length;
-        const totalPages = Math.ceil(totalItems / defaultLimit);
+            const totalItems = (await this.roleModel.find(filter)).length;
+            const totalPages = Math.ceil(totalItems / defaultLimit);
 
-        const result = await this.roleModel
-            .find(filter)
-            .skip(offset)
-            .limit(defaultLimit)
-            .sort(sort as any)
-            .populate(population)
-            .exec();
+            const result = await this.roleModel
+                .find(filter)
+                .skip(offset)
+                .limit(defaultLimit)
+                .sort(sort as any)
+                .populate(population)
+                .exec();
 
-        return {
-            meta: {
-                currentPage,
-                pageSize: limit,
-                totalPages,
-                totalItems,
-            },
-            result,
-        };
+            return {
+                meta: {
+                    currentPage,
+                    pageSize: limit,
+                    totalPages,
+                    totalItems,
+                },
+                result,
+            };
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 
     findOne = async (id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        const role = await this.roleModel.findById(id).populate({
-            path: 'permissions',
-            select: {
-                _id: 1,
-                apiPath: 1,
-                name: 1,
-                method: 1,
-                module: 1,
-            },
-        });
+            const role = await this.roleModel.findById(id).populate({
+                path: 'permissions',
+                select: {
+                    _id: 1,
+                    apiPath: 1,
+                    name: 1,
+                    method: 1,
+                    module: 1,
+                },
+            });
 
-        if (!role) throw new NotFoundException('role not found');
+            if (!role) throw new NotFoundException('role not found');
 
-        return role;
+            return role;
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 
     findOneByName = async (name: string) => {
-        const role = await this.roleModel.findOne({ name: name });
+        try {
+            const role = await this.roleModel.findOne({ name: name });
 
-        if (!role) throw new NotFoundException('role not found');
+            if (!role) throw new NotFoundException('role not found');
 
-        return role;
+            return role;
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 
     update = async (id: string, updateRoleDto: UpdateRoleDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
-
         try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
+
             const { name, description, isActive, permissions } = updateRoleDto;
 
             return await this.roleModel.updateOne(
@@ -124,42 +144,54 @@ export class RolesService {
         } catch (error) {
             if (error.code === 11000)
                 throw new ConflictException(`Duplicate key ${util.inspect(error.keyValue)}`);
+            this.logger.debug(error);
+            throw error;
         }
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        const role = await this.roleModel.findById(id);
-        if (role.name === ROLE_ADMIN) throw new BadRequestException('Cannot delete ROLE_ADMIN');
+            const role = await this.roleModel.findById(id);
+            if (role.name === ROLE_ADMIN) throw new BadRequestException('Cannot delete ROLE_ADMIN');
 
-        return await this.roleModel.updateOne(
-            { _id: id },
-            {
-                isDeleted: true,
-                deletedAt: Date.now(),
-                deletedBy: {
-                    _id: user._id,
-                    email: user.email,
+            return await this.roleModel.updateOne(
+                { _id: id },
+                {
+                    isDeleted: true,
+                    deletedAt: Date.now(),
+                    deletedBy: {
+                        _id: user._id,
+                        email: user.email,
+                    },
                 },
-            },
-        );
+            );
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 
     restore = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        return await this.roleModel.updateOne(
-            { _id: id },
-            {
-                isDeleted: false,
-                updatedBy: {
-                    _id: user._id,
-                    email: user.email,
+            return await this.roleModel.updateOne(
+                { _id: id },
+                {
+                    isDeleted: false,
+                    updatedBy: {
+                        _id: user._id,
+                        email: user.email,
+                    },
                 },
-            },
-        );
+            );
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 }

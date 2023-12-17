@@ -25,7 +25,7 @@ export class CompaniesService {
     };
 
     findAll = async (currentPage: number, limit: number, ps: string) => {
-        const { filter, sort, population } = aqp(ps);
+        const { filter, sort, population, projection } = aqp(ps);
         delete filter.currentPage;
         delete filter.limit;
 
@@ -40,6 +40,7 @@ export class CompaniesService {
             .skip(offset)
             .limit(defaultLimit)
             .sort(sort as any)
+            .select(projection)
             .populate(population)
             .exec();
 

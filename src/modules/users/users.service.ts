@@ -43,7 +43,12 @@ export class UsersService {
 
     createUser = async (createUserDto: CreateUserDto, user: IUser) => {
         try {
-            const hashPassword = await this.hashPassword(createUserDto.password);
+            const { email, password } = createUserDto;
+
+            const userExist = await this.userModel.findOne({ email });
+            if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
+
+            const hashPassword = await this.hashPassword(password);
 
             const roleUser = await this.roleService.findOneByName(ROLE_USER);
 
@@ -59,14 +64,19 @@ export class UsersService {
 
             return plainToClass(User, userNew.toObject());
         } catch (error) {
-            if (error.code === 11000) throw new ConflictException('user already exists');
-            throw new InternalServerErrorException(error.message);
+            this.logger.debug(error);
+            throw error;
         }
     };
 
     createUserHr = async (createUserHrDto: CreateUserHrDto, user: IUser) => {
         try {
-            const hashPassword = await this.hashPassword(createUserHrDto.password);
+            const { email, password } = createUserHrDto;
+
+            const userExist = await this.userModel.findOne({ email });
+            if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
+
+            const hashPassword = await this.hashPassword(password);
 
             const roleHr = await this.roleService.findOneByName(ROLE_HR);
 
@@ -83,48 +93,38 @@ export class UsersService {
             return plainToClass(User, userNew.toObject());
         } catch (error) {
             this.logger.debug(error);
-            if (error.code === 11000) throw new ConflictException('user already exists');
-            throw new InternalServerErrorException(error.message);
+            throw error;
         }
     };
 
-    register = async (registerDto: RegisterDto): Promise<UserDocument> => {
+    register = async (registerDto: RegisterDto) => {
         try {
-            const { name, email, password, age, gender, address } = registerDto;
+            const { email, password } = registerDto;
 
             const userExist = await this.userModel.findOne({ email });
-
             if (userExist) throw new BadRequestException(`Field email: ${email} already exist`);
 
             const userRole = await this.roleService.findOneByName(ROLE_USER);
 
-            if (!userRole)
-                throw new BadRequestException(
-                    `There is no ${ROLE_USER} data in the database to assign a default value to the user`,
-                );
-
             const hashPassword = await this.hashPassword(password);
 
-            return await this.userModel.create({
-                name,
-                email,
-                age,
-                gender,
-                address,
+            const userNew = await this.userModel.create({
+                ...registerDto,
                 password: hashPassword,
                 role: userRole._id,
             });
+
+            return plainToClass(User, userNew.toObject());
         } catch (error) {
-            if (error.code === 11000) {
-                throw new ConflictException('user already exists');
-            }
+            throw error;
         }
     };
 
     update = async (id: string, updateUserDto: UpdateUserDto, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
         try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
+
             return await this.userModel.updateOne(
                 { _id: id },
                 {
@@ -139,160 +139,157 @@ export class UsersService {
             if (error.code === 11000) throw new ConflictException('Email already exists');
             if (error.code === 66) throw new BadRequestException(error.message);
             this.logger.error(error);
-            throw new InternalServerErrorException(error.message);
+            throw error;
         }
     };
 
     remove = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        const userAdmin = await this.userModel.findById(id);
+            const userAdmin = await this.userModel.findById(id);
 
-        if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN'))
-            throw new BadRequestException('Cannot delete admin account');
+            if (userAdmin.email === this.configService.get<string>('EMAIL_ADMIN'))
+                throw new BadRequestException('Cannot delete admin account');
 
-        return await this.userModel.updateOne(
-            { _id: id },
-            {
-                isDeleted: true,
-                deletedAt: Date.now(),
-                deletedBy: {
-                    _id: user._id,
-                    email: user.email,
+            return await this.userModel.updateOne(
+                { _id: id },
+                {
+                    isDeleted: true,
+                    deletedAt: Date.now(),
+                    deletedBy: {
+                        _id: user._id,
+                        email: user.email,
+                    },
                 },
-            },
-        );
+            );
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     restore = async (id: string, user: IUser) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        return await this.userModel.updateOne(
-            { _id: id },
-            {
-                isDeleted: false,
-                updatedBy: {
-                    _id: user._id,
-                    email: user.email,
+            return await this.userModel.updateOne(
+                { _id: id },
+                {
+                    isDeleted: false,
+                    updatedBy: {
+                        _id: user._id,
+                        email: user.email,
+                    },
                 },
-            },
-        );
+            );
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     updateUserToken = async (refreshToken: string, id: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        return await this.userModel.updateOne({ _id: id }, { refreshToken });
+            return await this.userModel.updateOne({ _id: id }, { refreshToken });
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     findAll = async (currentPage: number, limit: number, ps: string) => {
-        const { filter, sort, population, projection } = aqp(ps);
-        delete filter.currentPage;
-        delete filter.limit;
+        try {
+            const { filter, sort, population, projection } = aqp(ps);
+            delete filter.currentPage;
+            delete filter.limit;
 
-        const offset = (+currentPage - 1) * +limit;
-        const defaultLimit = +limit ? +limit : 10;
+            const offset = (+currentPage - 1) * +limit;
+            const defaultLimit = +limit ? +limit : 10;
 
-        const totalItems = (await this.userModel.find(filter)).length;
-        const totalPages = Math.ceil(totalItems / defaultLimit);
+            const totalItems = (await this.userModel.find(filter)).length;
+            const totalPages = Math.ceil(totalItems / defaultLimit);
 
-        const result = await this.userModel
-            .find(filter)
-            .skip(offset)
-            .limit(defaultLimit)
-            .sort(sort as any)
-            .select({...projection, password: 0})
-            .populate(population)
-            .exec();
+            const result = await this.userModel
+                .find(filter)
+                .skip(offset)
+                .limit(defaultLimit)
+                .sort(sort as any)
+                .select({ ...projection, password: 0 })
+                .populate(population)
+                .exec();
 
-        return {
-            meta: {
-                currentPage, //trang hiện tại
-                pageSize: limit, //số lượng bản ghi đã lấy
-                totalPages, //tổng số trang với điều kiện query
-                totalItems, // tổng số phần tử (số bản ghi)
-            },
-            result, //kết quả query
-        };
+            return {
+                meta: {
+                    currentPage, //trang hiện tại
+                    pageSize: limit, //số lượng bản ghi đã lấy
+                    totalPages, //tổng số trang với điều kiện query
+                    totalItems, // tổng số phần tử (số bản ghi)
+                },
+                result, //kết quả query
+            };
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     // Get all value a user
     findOne = async (id: string, ps?: string) => {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            throw new BadRequestException('id must be mongooId');
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id))
+                throw new BadRequestException('id must be mongooId');
 
-        const user = await this.userModel
-            .findOne({ _id: id })
-            .select('-password -refreshToken')
-            .populate<IRolePopulate>([
-                { path: 'role', select: 'name' },
-                { path: 'company', select: 'name' },
-            ]);
+            const user = await this.userModel
+                .findOne({ _id: id })
+                .select('-password -refreshToken')
+                .populate<IRolePopulate>([
+                    { path: 'role', select: 'name' },
+                    { path: 'company', select: 'name' },
+                ]);
 
-        if (!user) throw new NotFoundException('user not exist');
+            if (!user) throw new NotFoundException('user not exist');
 
-        return user;
-
-        // const userObj = user.toObject();
-
-        // if (!('_id' in userObj.role))
-        //     throw new BadRequestException(`Role: ${userObj.role} not exsit in collection role`);
-
-        // const role = await this.roleService.findOne(userObj.role._id.toString());
-
-        // const result = {
-        //     ...userObj,
-        //     permissions: role.permissions,
-        // };
-
-        // return result;
+            return user;
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     findOneByUsername = async (username: string) => {
-        const user = await this.userModel
-            .findOne({ email: username })
-            .populate<IRolePopulate>({ path: 'role', select: 'name' });
+        try {
+            const user = await this.userModel
+                .findOne({ email: username })
+                .populate<IRolePopulate>({ path: 'role', select: 'name' });
 
-        if (!user) throw new NotFoundException('user not exist');
+            if (!user) throw new NotFoundException('user not exist');
 
-        // const userObj = user.toObject();
-
-        return user;
+            return user;
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
 
     findUserByToken = async (refreshToken: string): Promise<IUser> => {
-        const user = await this.userModel
-            .findOne({ refreshToken })
-            .select('-password')
-            .populate<IRolePopulate>({ path: 'role', select: 'name' });
+        try {
+            const user = await this.userModel
+                .findOne({ refreshToken })
+                .select('-password')
+                .populate<IRolePopulate>({ path: 'role', select: 'name' });
 
-        if (!user) throw new NotFoundException('user not exist');
+            if (!user) throw new NotFoundException('user not exist');
 
-        return user.toObject();
+            return user.toObject();
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     };
-
-    // resultUser = async (user: any) => {
-    //     if (!('_id' in user.role))
-    //         throw new BadRequestException(`Role: ${user.role} not exsit in collection role`);
-
-    //     const role = await this.roleService.findOne(user.role._id.toString());
-
-    //     const result: IUser = {
-    //         _id: user._id.toString(),
-    //         email: user.email,
-    //         name: user.name,
-    //         avatar: user.avatar,
-    //         password: user.password,
-    //         role: {
-    //             _id: role._id.toString(),
-    //             name: role.name,
-    //         },
-    //         permissions: role.permissions,
-    //     };
-
-    //     return result;
-    // };
 }
