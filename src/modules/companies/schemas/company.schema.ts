@@ -22,6 +22,10 @@ export class Company {
     @ApiProperty()
     logo: string;
 
+    @Prop()
+    @ApiProperty()
+    logoName: string;
+
     // Default
     @Prop({ default: false })
     @ApiProperty()

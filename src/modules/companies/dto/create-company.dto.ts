@@ -16,4 +16,8 @@ export class CreateCompanyDto {
     @IsNotEmpty({ message: 'Field logo cannot be empty' })
     @IsString({ message: 'Field logo must be string' })
     logo: string;
+
+    @IsNotEmpty({ message: 'Field logoName cannot be empty' })
+    @IsString({ message: 'Field logoName must be string' })
+    logoName: string;
 }
