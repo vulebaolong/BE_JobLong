@@ -34,9 +34,9 @@ export class CreateResumeDto {
 
     @IsNotEmpty({ message: 'Field companyId cannot be empty' })
     @IsMongoId({ message: 'Field companyId must be mongooId' })
-    companyId: ObjectId;
+    company: ObjectId;
 
     @IsNotEmpty({ message: 'companyId cannot be empty' })
     @IsMongoId({ message: 'Field companyId must be mongooId' })
-    jobId: ObjectId;
+    job: ObjectId;
 }

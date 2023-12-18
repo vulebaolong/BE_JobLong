@@ -1,12 +1,16 @@
 import { TStatus } from './create-resume.dto';
-import { IsIn, IsNotEmpty } from 'class-validator';
+import { IsIn, IsNotEmpty, IsUrl } from 'class-validator';
 
 export class UpdateResumeDto {
-    @IsNotEmpty({ message: 'Status cannot be empty' })
+    @IsNotEmpty({ message: 'Field status cannot be empty' })
     @IsIn(['PENDING', 'REVIEWING', 'APPROVED', 'REJECTED'], {
         message: `Status invalid, must be 1 of those 'PENDING', 'REVIEWING', 'APPROVED', 'REJECTED'`,
     })
     status: TStatus;
+
+    @IsNotEmpty({ message: 'Field url cannot be empty' })
+    @IsUrl({}, { message: 'Field url must be link' })
+    url: string;
 }
 
 // class UpdatedBy {

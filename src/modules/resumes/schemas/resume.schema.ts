@@ -4,6 +4,7 @@ import { TStatus } from '../dto/create-resume.dto';
 import { Company } from 'src/modules/companies/schemas/company.schema';
 import { Job } from 'src/modules/jobs/schemas/job.schemas';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/modules/users/schemas/user.schema';
 
 export type ResumeDocument = HydratedDocument<Resume>;
 
@@ -13,9 +14,9 @@ export class Resume {
     @ApiProperty()
     email: string;
 
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
     @ApiProperty()
-    userId: mongoose.Schema.Types.ObjectId;
+    user: mongoose.Schema.Types.ObjectId;
 
     @Prop()
     @ApiProperty()
@@ -27,11 +28,11 @@ export class Resume {
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
     @ApiProperty()
-    companyId: mongoose.Schema.Types.ObjectId;
+    company: mongoose.Schema.Types.ObjectId;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Job.name })
     @ApiProperty()
-    jobId: mongoose.Schema.Types.ObjectId;
+    job: mongoose.Schema.Types.ObjectId;
 
     @Prop({ type: mongoose.Schema.Types.Array })
     @ApiProperty()

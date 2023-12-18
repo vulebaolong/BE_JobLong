@@ -8,6 +8,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import {
     ApiCreateCompany,
     ApiDeleteCompany,
+    ApiDeleteHardCompany,
     ApiGetCompany,
     ApiGetListCompanies,
     ApiRestoreCompany,
@@ -59,6 +60,12 @@ export class CompaniesController {
     @ApiDeleteCompany()
     remove(@Param('id') id: string, @User() user: IUser) {
         return this.companiesService.remove(id, user);
+    }
+
+    @Delete('hard/:id')
+    @ApiDeleteHardCompany()
+    removeHard(@Param('id') id: string, @User() user: IUser) {
+        return this.companiesService.removeHard(id, user);
     }
 
     @Patch('restore/:id')

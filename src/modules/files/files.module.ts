@@ -8,6 +8,7 @@ import { FirebaseService } from 'src/modules/firebase/firebase.service';
 @Module({
     controllers: [FilesController],
     providers: [FilesService, FirebaseService],
+    exports: [FilesService],
     // imports: [
     //     MulterModule.registerAsync({
     //         useClass: MulterConfigService,

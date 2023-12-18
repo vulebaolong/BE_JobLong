@@ -7,12 +7,13 @@ import {
     getDownloadURL,
     deleteObject,
 } from 'firebase/storage';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import slugify from 'slugify';
 
 @Injectable()
 export class FirebaseService {
+    private readonly logger = new Logger(FirebaseService.name);
     private static firebaseApp: FirebaseApp;
     private static storage: FirebaseStorage;
 
@@ -56,9 +57,14 @@ export class FirebaseService {
     };
 
     remove = async (name: string) => {
-        const desertRef = ref(FirebaseService.storage, name);
-        await deleteObject(desertRef);
+        try {
+            const desertRef = ref(FirebaseService.storage, name);
+            await deleteObject(desertRef);
 
-        return `Xoa thành công ${name}`;
+            return `Successfully deleted images ${name} in firebase`;
+        } catch (error) {
+            this.logger.debug(error);
+            throw error;
+        }
     };
 }

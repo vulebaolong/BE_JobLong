@@ -17,23 +17,21 @@ export class ResumesService {
     ) {}
     create = async (createResumeDto: CreateResumeDto, user: IUser) => {
         try {
-            const { url, companyId, jobId } = createResumeDto;
-            const { _id, email } = user;
+            const { url, company, job } = createResumeDto;
 
             return await this.resumeModel.create({
                 url,
-                companyId,
-                jobId,
-                email,
-                userId: _id,
+                company,
+                job,
+                user: user._id,
                 history: [
                     {
                         status: createResumeDto.status || 'PENDING',
                         updatedAt: new Date(),
-                        updatedBy: { _id, email },
+                        updatedBy: { _id: user._id, email: user.email },
                     },
                 ],
-                createdBy: { _id, email },
+                createdBy: { _id: user._id, email: user.email },
             });
         } catch (error) {
             this.logger.debug(error);
@@ -46,7 +44,7 @@ export class ResumesService {
             const { filter, sort, population, projection } = aqp(qs);
             delete filter.currentPage;
             delete filter.limit;
-            const queryFilter = user ? { ...filter, userId: user._id } : filter;
+            const queryFilter = user ? { ...filter, user: user._id } : filter;
 
             const offset = (+currentPage - 1) * +limit;
             const defaultLimit = +limit ? +limit : 10;
@@ -59,7 +57,7 @@ export class ResumesService {
                 .skip(offset)
                 .limit(defaultLimit)
                 .sort(sort as any)
-                .select(projection as any)
+                .select(projection)
                 .populate(population)
                 .exec();
 
@@ -83,9 +81,7 @@ export class ResumesService {
             if (!mongoose.Types.ObjectId.isValid(id))
                 throw new BadRequestException('id must be mongooId');
 
-            const resume = await this.resumeModel
-                .findOne({ _id: id })
-                .where({ isDeleted: { $ne: true } });
+            const resume = await this.resumeModel.findOne({ _id: id });
 
             if (!resume) throw new NotFoundException('Not found resume');
 
@@ -101,7 +97,7 @@ export class ResumesService {
             if (!mongoose.Types.ObjectId.isValid(id))
                 throw new BadRequestException('id must be mongooId');
 
-            const { status } = updateResumeDto;
+            const { status, url } = updateResumeDto;
 
             const historyObj = {
                 status,
@@ -114,6 +110,7 @@ export class ResumesService {
 
             const updateQuery = {
                 status,
+                url,
                 $push: { history: historyObj },
                 updatedBy: {
                     _id: user._id,

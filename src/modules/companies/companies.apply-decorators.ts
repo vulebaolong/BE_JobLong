@@ -59,6 +59,19 @@ export const ApiDeleteCompany = () => {
     );
 };
 
+export const ApiDeleteHardCompany = () => {
+    const mes = 'Delete hard a company by id';
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiOperation({ summary: mes }),
+        ResponseMessage(mes),
+        OkResponse(mes, false, false, {
+            acknowledged: true,
+            deletedCount: 1,
+        }),
+    );
+};
+
 export const ApiRestoreCompany = () => {
     const mes = 'Restore a company by id';
     return applyDecorators(

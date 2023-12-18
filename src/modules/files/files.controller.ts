@@ -20,13 +20,12 @@ import { ResponseMessage } from 'src/common/decorators/response-message.decorato
 export class FilesController {
     constructor(
         private readonly filesService: FilesService,
-        private readonly firebaseService: FirebaseService,
     ) {}
 
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     @ResponseMessage('Upload single file')
-    create(
+    upload(
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({
@@ -49,26 +48,11 @@ export class FilesController {
 
         @Body('folder') folder: string,
     ) {
-        return this.firebaseService.upload(file, folder);
+        return this.filesService.upload(file, folder);
     }
-
-    // @Get()
-    // findAll() {
-    //     return this.filesService.findAll();
-    // }
-
-    // @Get(':id')
-    // findOne(@Param('id') id: string) {
-    //     return this.filesService.findOne(+id);
-    // }
-
-    // @Patch(':id')
-    // update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-    //     return this.filesService.update(id, updateFileDto);
-    // }
 
     @Delete()
     remove(@Body('name') name: string) {
-        return this.firebaseService.remove(name);
+        return this.filesService.remove(name);
     }
 }

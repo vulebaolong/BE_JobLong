@@ -1,5 +1,5 @@
 import { RolesService } from './../roles/roles.service';
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -88,7 +88,11 @@ export class PermissionsService {
             if (!mongoose.Types.ObjectId.isValid(id))
                 throw new BadRequestException('id must be mongooId');
 
-            return await this.permissionModel.findOne({ _id: id });
+            const permisstion = await this.permissionModel.findOne({ _id: id });
+
+            if (!permisstion) throw new NotFoundException(`permisstion ${id} not found`);
+
+            return permisstion
         } catch (error) {
             this.logger.debug(error);
             throw error;
