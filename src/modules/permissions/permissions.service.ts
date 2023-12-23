@@ -1,5 +1,11 @@
 import { RolesService } from './../roles/roles.service';
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -92,7 +98,7 @@ export class PermissionsService {
 
             if (!permisstion) throw new NotFoundException(`permisstion ${id} not found`);
 
-            return permisstion
+            return permisstion;
         } catch (error) {
             this.logger.debug(error);
             throw error;

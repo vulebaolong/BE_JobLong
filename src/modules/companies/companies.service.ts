@@ -11,7 +11,7 @@ import { FilesService } from '../files/files.service';
 @Injectable()
 export class CompaniesService {
     private readonly logger = new Logger(CompaniesService.name);
-   
+
     constructor(
         @InjectModel(Company.name)
         private companyModel: Model<CompanyDocument>,
@@ -133,13 +133,13 @@ export class CompaniesService {
             if (!mongoose.Types.ObjectId.isValid(id))
                 throw new BadRequestException('id must be mongooId');
 
-            const company = await this.companyModel.findById(id)
+            const company = await this.companyModel.findById(id);
 
             if (!company) throw new NotFoundException(`company ${id} not found`);
 
-            await this.filesService.remove(company.logoName)
+            await this.filesService.remove(company.logoName);
 
-            return await this.companyModel.deleteOne({_id: id});;
+            return await this.companyModel.deleteOne({ _id: id });
         } catch (error) {
             this.logger.debug(error);
             throw error;

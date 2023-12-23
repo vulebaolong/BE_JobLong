@@ -33,8 +33,8 @@ async function bootstrap() {
     });
 
     app.enableCors({
-        // origin: '*' => cho phép tất cả truy cập
-        origin: true, //=> cho phép cùng domain eg: localhost
+        // origin: '*' => Allow all access
+        origin: true, //=> allow same domain eg: localhost
         // origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         preflightContinue: false,

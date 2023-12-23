@@ -18,9 +18,7 @@ import { ResponseMessage } from 'src/common/decorators/response-message.decorato
 @ApiTags(TAG_MODULE_FILES)
 @Controller('files')
 export class FilesController {
-    constructor(
-        private readonly filesService: FilesService,
-    ) {}
+    constructor(private readonly filesService: FilesService) {}
 
     @Post()
     @UseInterceptors(FileInterceptor('file'))
