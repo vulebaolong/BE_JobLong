@@ -109,8 +109,7 @@ export class ResumesService {
             };
 
             const updateQuery = {
-                status,
-                url,
+                ...updateResumeDto,
                 $push: { history: historyObj },
                 updatedBy: {
                     _id: user._id,
