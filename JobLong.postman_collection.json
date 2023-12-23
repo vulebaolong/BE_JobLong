@@ -1,0 +1,1865 @@
+{
+	"info": {
+		"_postman_id": "3862bc50-9195-4570-b299-6877d9b42a82",
+		"name": "JobLong",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16940726"
+	},
+	"item": [
+		{
+			"name": "Module auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"vulebaolong@gmail.com\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n// {\r\n//     \"username\": \"test@gmail.com\",\r\n//     \"password\": \"123456\"\r\n// }\r\n\r\n// {\r\n//     \"username\": \"vulebaolongdeptrai11@gmail.com\",\r\n//     \"password\": \"123456\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}auth/login",
+							"host": [
+								"{{domain}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"123\",\r\n    \"email\": \"123123@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"address\": \"123\",\r\n    \"age\": 123,\r\n    \"gender\": \"Female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}auth/register",
+							"host": [
+								"{{domain}}auth"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}auth/refresh",
+							"host": [
+								"{{domain}}auth"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}auth/logout",
+							"host": [
+								"{{domain}}auth"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}auth/account",
+							"host": [
+								"{{domain}}auth"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module company",
+			"item": [
+				{
+					"name": "create a company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"string\",\r\n  \"address\": \"string\",\r\n  \"description\": \"string\",\r\n  \"logo\": \"images.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}companies",
+							"host": [
+								"{{domain}}companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"123\",\r\n    \"address\": \"123\",\r\n    \"description\": \"123\",\r\n    \"logo\": \"hinhne.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}companies/65535688b1f1068113a77124",
+							"host": [
+								"{{domain}}companies"
+							],
+							"path": [
+								"65535688b1f1068113a77124"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}companies/6541e06a98aae91b5ae1099b",
+							"host": [
+								"{{domain}}companies"
+							],
+							"path": [
+								"6541e06a98aae91b5ae1099b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete hard a company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}companies/hard/657ef5a2d6cebe1eff78e358",
+							"host": [
+								"{{domain}}companies"
+							],
+							"path": [
+								"hard",
+								"657ef5a2d6cebe1eff78e358"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "company with pagination",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}companies?currentPage=1&limit=10&fields=-description",
+							"host": [
+								"{{domain}}companies"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "/long/i",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "fields",
+									"value": "-description"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get company by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}companies/64871701c7573fac797f83ea",
+							"host": [
+								"{{domain}}companies"
+							],
+							"path": [
+								"64871701c7573fac797f83ea"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "/long/i",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restore a company by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}companies/restore/6568bb1b75c8dee238498abc",
+							"host": [
+								"{{domain}}companies"
+							],
+							"path": [
+								"restore",
+								"6568bb1b75c8dee238498abc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module users",
+			"item": [
+				{
+					"name": "create a user by admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"123\",\r\n    \"email\": \"123@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"address\": \"123\",\r\n    \"age\": \"123\",\r\n    \"gender\": \"Female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}users",
+							"host": [
+								"{{domain}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a user hr by admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"HRHRHRHRH\",\r\n    \"email\": \"HRHRHRHRH@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"age\": 18,\r\n    \"gender\": \"Female\",\r\n    \"address\": \"Việt Nam\",\r\n    \"company\": \"648717fac7573fac797f83fe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}users/hr",
+							"host": [
+								"{{domain}}users"
+							],
+							"path": [
+								"hr"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}users/6568bb1b75c8dee238498aba",
+							"host": [
+								"{{domain}}users"
+							],
+							"path": [
+								"6568bb1b75c8dee238498aba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}users/6571ad50589991b986a67809",
+							"host": [
+								"{{domain}}users"
+							],
+							"path": [
+								"6571ad50589991b986a67809"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Vũ Lê Bảo depk trai lắm\",\r\n    \"email\": \"vuleba@gmail.com\",\r\n    \"age\": 18,\r\n    \"gender\": \"nam\",\r\n    \"address\": \"Việt Nam\",\r\n    \"role\": \"6568bb1a75c8dee238498ab6\",\r\n    \"company\": {\r\n        \"_id\": \"654289d77c16cd7e1c277cc2\",\r\n        \"name\": \"long6\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}users/656b67c40c569287b4717548",
+							"host": [
+								"{{domain}}users"
+							],
+							"path": [
+								"656b67c40c569287b4717548"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user with panigation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}users?currentPage=1&limit=10&populate=role&sort=-createdAt",
+							"host": [
+								"{{domain}}users"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "role"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restore a user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}users/restore/6568bb1b75c8dee238498abc",
+							"host": [
+								"{{domain}}users"
+							],
+							"path": [
+								"restore",
+								"6568bb1b75c8dee238498abc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module resume",
+			"item": [
+				{
+					"name": "create resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://www.udemy.com/course/hoidanit-nestjs-basic-typescript/learn/lecture/38319736#questions\",\r\n    \"company\": \"64871701c7573fac797f83ea\",\r\n    \"job\": \"6487e52ae263fe0b853d752a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}resumes",
+							"host": [
+								"{{domain}}resumes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get resume with pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}resumes?currentPage=1&limit=10&populate=companyId,jobId,userId&fields=companyId.name,jobId.name,userId.email",
+							"host": [
+								"{{domain}}resumes"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "companyId,jobId,userId"
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,jobId.name,userId.email"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get resume of user with pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}resumes/by-user?currentPage=1&limit=10&populate=companyId,jobId&fields=companyId.name,jobId.name&sort=-createdAt",
+							"host": [
+								"{{domain}}resumes"
+							],
+							"path": [
+								"by-user"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "companyId,jobId"
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,jobId.name"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a resume by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}resumes/6564c8aa5fe9e1127d19b061",
+							"host": [
+								"{{domain}}resumes"
+							],
+							"path": [
+								"6564c8aa5fe9e1127d19b061"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change status a Resume (update a resume)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"REJECTED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}resumes/6564c5cda45efa52ada6f7a2",
+							"host": [
+								"{{domain}}resumes"
+							],
+							"path": [
+								"6564c5cda45efa52ada6f7a2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}resumes/6564c8aa5fe9e1127d19b061",
+							"host": [
+								"{{domain}}resumes"
+							],
+							"path": [
+								"6564c8aa5fe9e1127d19b061"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module files",
+			"item": [
+				{
+					"name": "upload file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "folder_type",
+								"value": "hinhne",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/vuleb/Downloads/Bao_Long/CV/CV_baolong/asset/IMG_2747_fix.JPG"
+								},
+								{
+									"key": "folder",
+									"value": "avatar",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}files",
+							"host": [
+								"{{domain}}files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "folder_type",
+								"value": "hinhne",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"avatar/Skyscraper_(2018)_film_poster-1703308473444.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}files",
+							"host": [
+								"{{domain}}files"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module permissions",
+			"item": [
+				{
+					"name": "create a permission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tạo để xoá\",\r\n    \"apiPath\": \"/api/v1/users/tao_de_xoa\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"USERS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}permissions",
+							"host": [
+								"{{domain}}permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a permission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}permissions/6565d02828b690d344a3a3fc",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"path": [
+								"6565d02828b690d344a3a3fc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restore a permission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}permissions/restore/6565d02828b690d344a3a3fc",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"path": [
+								"restore",
+								"6565d02828b690d344a3a3fc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get permission with pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}permissions?currentPage=1&limit=10",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "companyId,jobId",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,companyId.logo,jobId.name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a permission by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}permissions/6565d02828b690d344a3a3fc",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"path": [
+								"6565d02828b690d344a3a3fc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list permissions by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}permissions/by-user",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"path": [
+								"by-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a permission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}permissions/6565d02828b690d344a3a3fc",
+							"host": [
+								"{{domain}}permissions"
+							],
+							"path": [
+								"6565d02828b690d344a3a3fc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module role",
+			"item": [
+				{
+					"name": "create a role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"ROLE_HR\",\r\n    \"description\": \"Người dùng/Nhà tuyển dụng sử dụng hệ thống\",\r\n    \"isActive\": true,\r\n    \"permissions\": [\"648ab415f4328bd3153ee211\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}roles",
+							"host": [
+								"{{domain}}roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"ROLE_ADMIN\",\r\n    \"description\": \"Admin thì full quyền :v\",\r\n    \"isActive\": true,\r\n    \"permissions\": [\r\n        \"648ab415f4328bd3153ee211\",\r\n        \"648ab436f4328bd3153ee216\",\r\n        \"648ab4d5f4328bd3153ee21b\",\r\n        \"648ab4ebf4328bd3153ee220\",\r\n        \"648ab5a8072f2a2ef910638d\",\r\n        \"648ab6d3fa16b294212e4033\",\r\n        \"648ab6e7fa16b294212e4038\",\r\n        \"648ab6fdfa16b294212e403d\",\r\n        \"648ab719fa16b294212e4042\",\r\n        \"648ab728fa16b294212e4047\",\r\n        \"648ab750fa16b294212e404c\",\r\n        \"648ad488dafdb9754f40b846\",\r\n        \"648ad499dafdb9754f40b84b\",\r\n        \"648ad4a6dafdb9754f40b850\",\r\n        \"648ad4ccdafdb9754f40b859\",\r\n        \"648ad4d9dafdb9754f40b85e\",\r\n        \"648ad4fedafdb9754f40b863\",\r\n        \"648ad511dafdb9754f40b868\",\r\n        \"648ad522dafdb9754f40b86d\",\r\n        \"648ad53bdafdb9754f40b872\",\r\n        \"648ad555dafdb9754f40b877\",\r\n        \"648ad56ddafdb9754f40b87c\",\r\n        \"648ad59adafdb9754f40b881\",\r\n        \"648ad5aedafdb9754f40b886\",\r\n        \"648ad5c5dafdb9754f40b88b\",\r\n        \"648ad5d4dafdb9754f40b890\",\r\n        \"648ad5ebdafdb9754f40b895\",\r\n        \"648ad613dafdb9754f40b89a\",\r\n        \"648ad622dafdb9754f40b89f\",\r\n        \"648ad630dafdb9754f40b8a6\",\r\n        \"648ad640dafdb9754f40b8ab\",\r\n        \"648ad650dafdb9754f40b8b0\",\r\n        \"656a0028bc11cd108aac777b\",\r\n        \"656a006abc11cd108aac7782\",\r\n        \"656a009fbc11cd108aac7789\",\r\n        \"656a00c2bc11cd108aac7790\",\r\n        \"656a00e6bc11cd108aac7797\",\r\n        \"656ad6dc274cd4a0d49b4240\",\r\n        \"656bf91c5d615bfc5de408ee\",\r\n        \"656c0558823e57f5be777a43\",\r\n        \"656c503ef8e369fda065a960\",\r\n        \"656c659c9f98a9a9387b13f7\",\r\n        \"656c689ffc1796eeff14c499\",\r\n        \"656f537299b052f3b69f02dd\",\r\n        \"6573e01c3dde80dfcc6b8510\",\r\n        \"65753618e2ac2f1f7e5ff58d\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}roles/6568bb1a75c8dee238498ab5",
+							"host": [
+								"{{domain}}roles"
+							],
+							"path": [
+								"6568bb1a75c8dee238498ab5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get roles with pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}roles?currentPage=1&limit=10",
+							"host": [
+								"{{domain}}roles"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "companyId,jobId",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,companyId.logo,jobId.name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a role by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}roles/6568bb1a75c8dee238498ab5",
+							"host": [
+								"{{domain}}roles"
+							],
+							"path": [
+								"6568bb1a75c8dee238498ab5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}roles/6565f49e6392e36df9f0c53b",
+							"host": [
+								"{{domain}}roles"
+							],
+							"path": [
+								"6565f49e6392e36df9f0c53b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restore a role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}roles/restore/6565d02828b690d344a3a3f",
+							"host": [
+								"{{domain}}roles"
+							],
+							"path": [
+								"restore",
+								"6565d02828b690d344a3a3f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module subcriber",
+			"item": [
+				{
+					"name": "get skills",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}subscribers/skills",
+							"host": [
+								"{{domain}}subscribers"
+							],
+							"path": [
+								"skills"
+							],
+							"query": [
+								{
+									"key": "populate",
+									"value": "companyId,jobId",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,companyId.logo,jobId.name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get subscribers with pagination Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}subscribers?currentPage=1&limit=10",
+							"host": [
+								"{{domain}}subscribers"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "populate",
+									"value": "companyId,jobId",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "companyId.name,companyId.logo,jobId.name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a subscribers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"vulebaolon123g@gmail.com\",\r\n    \"name\": \"namenamenamenamename123\",\r\n    \"skills\": [\r\n        \"TYPESCRIPT\",\r\n        \"JAVA\",\r\n        \"FULLSTACK\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}subscribers",
+							"host": [
+								"{{domain}}subscribers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a subscriber by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}subscribers/6569f8995aab0ed5a076b4cc",
+							"host": [
+								"{{domain}}subscribers"
+							],
+							"path": [
+								"6569f8995aab0ed5a076b4cc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a subscriber",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"vulebaolong@gmail.com\",\r\n    \"name\": \"namenamenamenamename\",\r\n    \"skills\": [\r\n        \"TYPESCRIPT\",\r\n        \"JAVA\",\r\n        \"FULLSTACK\",\r\n        \"REACTJS\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}subscribers",
+							"host": [
+								"{{domain}}subscribers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a role Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}subscribers/6569f8995aab0ed5a076b4cc",
+							"host": [
+								"{{domain}}subscribers"
+							],
+							"path": [
+								"6569f8995aab0ed5a076b4cc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module email",
+			"item": [
+				{
+					"name": "Test send email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}mail",
+							"host": [
+								"{{domain}}mail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Module jobs",
+			"item": [
+				{
+					"name": "create a job",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjU0NDZkMzgyODkzZWYxMTgwNGQzYjJmIiwibmFtZSI6IlbFqSBMw6ogQuG6o28gZGVwayB0cmFpIiwiZW1haWwiOiJ2dWxlYmFvbG9uZ2RlcHRyYWlAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2OTk4OTYxNzEsImV4cCI6MTcwMDQ5NjE3MX0.sltOXtQJIeeln2EUcck608BfLBucSWGzBWl1MI_A4rw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tuyển NestJS công ty Product Dragon\",\r\n    \"skills\": [\r\n        \"Node.JS\",\r\n        \"Nest.JS\",\r\n        \"MongoDB\"\r\n    ],\r\n    \"company\": {\r\n        \"_id\": \"654289d77c16cd7e1c277cc2\",\r\n        \"name\": \"Hỏi Dân IT\"\r\n    },\r\n    \"location\": \"Việt Nam\",\r\n    \"salary\": 15000000,\r\n    \"quantity\": 10,\r\n    \"level\": \"FRESHER\",\r\n    \"description\": \"JUST A DATE\",\r\n    \"startDate\": \"2023-11-05T12:59:09.561Z\",\r\n    \"endDate\": \"2023-12-05T12:59:09.561Z\",\r\n    \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}jobs",
+							"host": [
+								"{{domain}}jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a job",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"hello\",\r\n    \"skills\": [\r\n        \"Node.JS\",\r\n        \"Nest.JS\",\r\n        \"MongoDB\"\r\n    ],\r\n    \"company\": {\r\n        \"_id\": \"654289d77c16cd7e1c277cc2\",\r\n        \"name\": \"Hỏi Dân IT\"\r\n    },\r\n    \"location\": \"Việt Nam\",\r\n    \"salary\": 15000000,\r\n    \"quantity\": 10,\r\n    \"level\": \"FRESHER\",\r\n    \"description\": \"JUST A DATE\",\r\n    \"startDate\": \"2023-11-05T12:59:09.561Z\",\r\n    \"endDate\": \"2023-12-05T12:59:09.561Z\",\r\n    \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}jobs/65525b8966d13e4dd7b9d7b2",
+							"host": [
+								"{{domain}}jobs"
+							],
+							"path": [
+								"65525b8966d13e4dd7b9d7b2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a job",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjU0NDZkMzgyODkzZWYxMTgwNGQzYjJmIiwibmFtZSI6IlbFqSBMw6ogQuG6o28gZGVwayB0cmFpIiwiZW1haWwiOiJ2dWxlYmFvbG9uZ2RlcHRyYWlAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2OTk4OTY0MTYsImV4cCI6MTcwMDQ5NjQxNn0.9xxAfEUa-I9Rb1Wcy3yb1AQ4xE2mlOcXBlpwgDrJs08",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}jobs/65525b8966d13e4dd7b9d7b2",
+							"host": [
+								"{{domain}}jobs"
+							],
+							"path": [
+								"65525b8966d13e4dd7b9d7b2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a job by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}jobs/6487e52ae263fe0b853d752a?populate=company&fields=company.logo",
+							"host": [
+								"{{domain}}jobs"
+							],
+							"path": [
+								"6487e52ae263fe0b853d752a"
+							],
+							"query": [
+								{
+									"key": "populate",
+									"value": "company"
+								},
+								{
+									"key": "fields",
+									"value": "company.logo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get jobs with pagination",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}jobs?currentPage=1&limit=2&populate=company&fields=company.logo,description",
+							"host": [
+								"{{domain}}jobs"
+							],
+							"query": [
+								{
+									"key": "currentPage",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "populate",
+									"value": "company"
+								},
+								{
+									"key": "fields",
+									"value": "company.logo,description"
+								},
+								{
+									"key": "fields",
+									"value": "-description",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restore a job",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{toklen}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fetch useruser\",\r\n    \"apiPath\": \"/users\",\r\n    \"method\": \"POST\",\r\n    \"module\": \"BLA BLA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}jobs/restore/6565d02828b690d344a3a3fc",
+							"host": [
+								"{{domain}}jobs"
+							],
+							"path": [
+								"restore",
+								"6565d02828b690d344a3a3fc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6969/api/v1/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6969",
+					"path": [
+						"api",
+						"v1",
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:6969/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "toklen",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsIl9pZCI6IjY1NjhiYjFiNzVjOGRlZTIzODQ5OGFiYiIsIm5hbWUiOiJWxakgTMOqIELhuqNvIExvbmciLCJlbWFpbCI6InZ1bGViYW9sb25nQGdtYWlsLmNvbSIsInJvbGUiOnsiX2lkIjoiNjU2OGJiMWE3NWM4ZGVlMjM4NDk4YWI1IiwibmFtZSI6IlJPTEVfQURNSU4ifSwiaWF0IjoxNzAzMzAyMTU3LCJleHAiOjE3MzQ0MDYxNTd9.I-o_59RXFx0SVUW14nlX4sLyWLNGwooNhh0DQxYp_jQ",
+			"type": "string"
+		}
+	]
+}
