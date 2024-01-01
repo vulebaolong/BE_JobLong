@@ -1,10 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { CreateJobDto } from './dto/create-job.dto';
 import { Job } from './schemas/job.schemas';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { UpdateJobDto } from './dto/update-job.dto';
 
 export const ApiCreateJob = () => {

@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Company } from 'src/modules/companies/schemas/company.schema';
-import { Role } from 'src/modules/roles/schemas/role.schema';
+import { Company } from '../../../modules/companies/schemas/company.schema';
+import { Role } from '../../../modules/roles/schemas/role.schema';
 
 export type UserDocument = HydratedDocument<User>;
 

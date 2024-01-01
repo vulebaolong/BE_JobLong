@@ -4,8 +4,8 @@ import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_RESUMES } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_RESUMES } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreateResume,
     ApiDeleteResume,

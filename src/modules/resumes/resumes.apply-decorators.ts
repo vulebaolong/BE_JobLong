@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { Resume } from './schemas/resume.schema';
 import { UpdateResumeDto } from './dto/update-resume.dto';

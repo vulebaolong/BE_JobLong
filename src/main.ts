@@ -44,7 +44,7 @@ async function bootstrap() {
     app.use(helmet());
 
     // swagger
-    // useSwagger(app);
+    useSwagger(app);
 
     const port = process.env.PORT;
     await app.listen(port).then(() => {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FilesController } from './files.controller';
-import { FirebaseService } from 'src/modules/firebase/firebase.service';
+import { FirebaseService } from '../../modules/firebase/firebase.service';
 // import { MulterModule } from '@nestjs/platform-express';
 // import { MulterConfigService } from './multer.config';
 

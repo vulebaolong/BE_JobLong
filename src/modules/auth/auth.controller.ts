@@ -5,8 +5,8 @@ import { RegisterDto } from './dto/register.dto';
 import { Request, Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_AUTH } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_AUTH } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import { ApiLogin, ApiRefresh, ApiRegister, ApiLogout, ApiAcount } from './auth.apply-decorators';
 
 @ApiTags(TAG_MODULE_AUTH)

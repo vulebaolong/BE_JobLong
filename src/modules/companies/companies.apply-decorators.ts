@@ -1,10 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { Company } from './schemas/company.schema';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 export const ApiCreateCompany = () => {

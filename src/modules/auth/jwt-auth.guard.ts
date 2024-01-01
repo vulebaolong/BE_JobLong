@@ -8,8 +8,8 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Permission } from '../permissions/schemas/permission.schema';
-import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
-import { IS_PUBLIC_PERMISSION } from 'src/common/decorators/skip-check-permission.decorator';
+import { IS_PUBLIC_KEY } from '../../common/decorators/public.decorator';
+import { IS_PUBLIC_PERMISSION } from '../../common/decorators/skip-check-permission.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

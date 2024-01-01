@@ -4,7 +4,7 @@ import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { User } from 'src/common/decorators/user.decorator';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreateSubscriber,
     ApiDeleteSubscriber,

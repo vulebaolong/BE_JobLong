@@ -2,7 +2,6 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
-    InternalServerErrorException,
     Logger,
     NotFoundException,
 } from '@nestjs/common';
@@ -15,10 +14,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { IRolePopulate, IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
-import { RegisterDto } from 'src/modules/auth/dto/register.dto';
+import { RegisterDto } from '../../modules/auth/dto/register.dto';
 import { RolesService } from '../roles/roles.service';
 import { plainToClass } from 'class-transformer';
-import { ROLE_HR, ROLE_USER } from 'src/common/contants/role.contants';
+import { ROLE_HR, ROLE_USER } from '../../common/contants/role.contants';
 
 @Injectable()
 export class UsersService {

@@ -1,9 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { Role } from 'src/modules/roles/schemas/role.schema';
+import { Role } from '../../modules/roles/schemas/role.schema';
 import { UpdateRoleDto } from './dto/update-role.dto';
 
 export const ApiCreateRole = () => {

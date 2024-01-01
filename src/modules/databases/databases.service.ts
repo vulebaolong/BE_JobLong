@@ -7,7 +7,7 @@ import { Permission, PermissionDocument } from '../permissions/schemas/permissio
 import { Role, RoleDocument } from '../roles/schemas/role.schema';
 import { UsersService } from '../users/users.service';
 import { Model } from 'mongoose';
-import { ROLE_ADMIN, ROLE_USER } from 'src/common/contants/role.contants';
+import { ROLE_ADMIN, ROLE_USER } from '../../common/contants/role.contants';
 
 @Injectable()
 export class DatabasesService implements OnModuleInit {

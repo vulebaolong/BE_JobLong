@@ -4,8 +4,8 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_JOBS } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_JOBS } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreateJob,
     ApiDeleteJob,

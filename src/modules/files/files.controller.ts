@@ -11,9 +11,9 @@ import {
 import { FilesService } from './files.service';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FirebaseService } from 'src/modules/firebase/firebase.service';
-import { TAG_MODULE_FILES } from 'src/common/contants/swagger.contants';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { FirebaseService } from '../../modules/firebase/firebase.service';
+import { TAG_MODULE_FILES } from '../../common/contants/swagger.contants';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 
 @ApiTags(TAG_MODULE_FILES)
 @Controller('files')

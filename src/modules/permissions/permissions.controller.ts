@@ -4,8 +4,8 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_PERMISSIONS } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_PERMISSIONS } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreatePermission,
     ApiDeletePermission,

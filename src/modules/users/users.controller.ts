@@ -4,8 +4,8 @@ import { CreateUserDto, CreateUserHrDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from './users.interface';
-import { TAG_MODULE_USER } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_USER } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreateUser,
     ApiCreateUserHr,

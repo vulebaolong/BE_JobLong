@@ -4,8 +4,8 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_ROLES } from 'src/common/contants/swagger.contants';
-import { User } from 'src/common/decorators/user.decorator';
+import { TAG_MODULE_ROLES } from '../../common/contants/swagger.contants';
+import { User } from '../../common/decorators/user.decorator';
 import {
     ApiCreateRole,
     ApiDeleteRole,

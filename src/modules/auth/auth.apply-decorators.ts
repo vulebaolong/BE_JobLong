@@ -1,11 +1,11 @@
 import { UseGuards, applyDecorators } from '@nestjs/common';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { LocalAuthGuard } from './local-auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { LoginDto, LoginResSwagger } from './dto/login.dto';
-import { OkResponse } from 'src/common/swagger/swagger';
+import { OkResponse } from '../../common/swagger/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { UserResSwagger } from '../users/schemas/user.schema';
 

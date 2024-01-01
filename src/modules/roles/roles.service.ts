@@ -14,7 +14,7 @@ import mongoose, { Model } from 'mongoose';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
 import { IUser } from '../users/users.interface';
-import { ROLE_ADMIN } from 'src/common/contants/role.contants';
+import { ROLE_ADMIN } from '../../common/contants/role.contants';
 
 @Injectable()
 export class RolesService {

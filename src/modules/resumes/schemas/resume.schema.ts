@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { TStatus } from '../dto/create-resume.dto';
-import { Company } from 'src/modules/companies/schemas/company.schema';
-import { Job } from 'src/modules/jobs/schemas/job.schemas';
+import { Company } from '../../../modules/companies/schemas/company.schema';
+import { Job } from '../../../modules/jobs/schemas/job.schemas';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/modules/users/schemas/user.schema';
+import { User } from '../../../modules/users/schemas/user.schema';
 
 export type ResumeDocument = HydratedDocument<Resume>;
 

@@ -1,8 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 import { CreateUserDto, CreateUserHrDto } from './dto/create-user.dto';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { User, UserResSwagger } from './schemas/user.schema';
 
 export const ApiCreateUser = () => {

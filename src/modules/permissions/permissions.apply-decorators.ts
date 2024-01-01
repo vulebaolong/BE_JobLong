@@ -1,8 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { Permission } from './schemas/permission.schema';
 
 export const ApiCreatePermission = () => {

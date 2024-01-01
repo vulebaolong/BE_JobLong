@@ -4,9 +4,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { InjectModel } from '@nestjs/mongoose';
 // import { Cron, CronExpression } from '@nestjs/schedule';
 import { ApiTags } from '@nestjs/swagger';
-import { Subscriber, SubscriberDocument } from 'src/modules/subscribers/schemas/subscriber.schema';
+import { Subscriber, SubscriberDocument } from '../../modules/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from '../jobs/schemas/job.schemas';
-import { TAG_MODULE_MAIL } from 'src/common/contants/swagger.contants';
+import { TAG_MODULE_MAIL } from '../../common/contants/swagger.contants';
 import { ApiSendMail } from './mail.apply-decorators';
 import { Model } from 'mongoose';
 

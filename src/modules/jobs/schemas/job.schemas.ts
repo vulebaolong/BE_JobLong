@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Company } from 'src/modules/companies/schemas/company.schema';
+import { Company } from '../../../modules/companies/schemas/company.schema';
 
 export type JobDocument = HydratedDocument<Job>;
 

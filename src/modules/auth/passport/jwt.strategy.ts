@@ -3,10 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IPayloadToken } from '../auth.interface';
-import { UsersService } from 'src/modules/users/users.service';
-import { RolesService } from 'src/modules/roles/roles.service';
-import { PermissionsService } from 'src/modules/permissions/permissions.service';
-import { IUser } from 'src/modules/users/users.interface';
+import { UsersService } from '../../../modules/users/users.service';
+import { PermissionsService } from '../../../modules/permissions/permissions.service';
+import { IUser } from '../../../modules/users/users.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

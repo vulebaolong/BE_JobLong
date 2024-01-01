@@ -19,14 +19,14 @@ import {
     TAG_MODULE_ROLES,
     TAG_MODULE_SUBSCRIBERS,
     TAG_MODULE_USER,
-} from 'src/common/contants/swagger.contants';
-import { Company } from 'src/modules/companies/schemas/company.schema';
-import { Job } from 'src/modules/jobs/schemas/job.schemas';
-import { Permission } from 'src/modules/permissions/schemas/permission.schema';
-import { Resume } from 'src/modules/resumes/schemas/resume.schema';
-import { Role } from 'src/modules/roles/schemas/role.schema';
-import { Subscriber } from 'src/modules/subscribers/schemas/subscriber.schema';
-import { User } from 'src/modules/users/schemas/user.schema';
+} from '../../common/contants/swagger.contants';
+import { Company } from '../../modules/companies/schemas/company.schema';
+import { Job } from '../../modules/jobs/schemas/job.schemas';
+import { Permission } from '../../modules/permissions/schemas/permission.schema';
+import { Resume } from '../../modules/resumes/schemas/resume.schema';
+import { Role } from '../../modules/roles/schemas/role.schema';
+import { Subscriber } from '../../modules/subscribers/schemas/subscriber.schema';
+import { User } from '../../modules/users/schemas/user.schema';
 import { SwaggerTheme } from 'swagger-themes';
 
 export const useSwagger = (app: INestApplication) => {

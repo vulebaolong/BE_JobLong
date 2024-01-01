@@ -1,10 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CreatedResponse, OkResponse, UpdatedResponse } from 'src/common/swagger/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CreatedResponse, OkResponse, UpdatedResponse } from '../../common/swagger/swagger';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { Subscriber } from './schemas/subscriber.schema';
-import { SkipCheckPermission } from 'src/common/decorators/skip-check-permission.decorator';
+import { SkipCheckPermission } from '../../common/decorators/skip-check-permission.decorator';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 
 export const ApiCreateSubscriber = () => {
