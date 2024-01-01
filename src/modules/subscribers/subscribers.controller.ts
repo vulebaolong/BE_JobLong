@@ -4,7 +4,6 @@ import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUser } from '../users/users.interface';
-import { TAG_MODULE_SUBSCRIBERS } from 'src/common/contants/swagger.contants';
 import { User } from 'src/common/decorators/user.decorator';
 import {
     ApiCreateSubscriber,
@@ -15,6 +14,7 @@ import {
     ApiRestoreSubscriber,
     ApiUpdateSubscriber,
 } from './subscribers.apply-decorators';
+import { TAG_MODULE_SUBSCRIBERS } from '../../common/contants/swagger.contants';
 
 @ApiTags(TAG_MODULE_SUBSCRIBERS)
 @Controller('subscribers')
